@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import type { Ticket } from "@/lib/types";
 import { TicketList } from "./ticket-list";
 import { TicketDetail } from "./ticket-detail";
-import { PanelLeft } from "lucide-react";
+import { Bell, PanelLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSidebar } from "../ui/sidebar";
 import { tickets as initialTicketsData } from "@/lib/data";
+import Link from "next/link";
 
 const LOCAL_STORAGE_KEY = "responseflow-tickets";
 
@@ -45,12 +46,20 @@ export function InboxPageClient({ initialTickets }: { initialTickets: Ticket[] }
   return (
     <div className="flex h-screen bg-background">
       <div className="flex flex-col flex-1 min-w-0">
-        <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
+        <header className="flex h-16 items-center justify-between gap-4 border-b bg-background px-6">
+          <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSidebar}>
                 <PanelLeft />
                 <span className="sr-only">Toggle Sidebar</span>
             </Button>
             <h1 className="text-xl font-semibold">Unified Inbox</h1>
+          </div>
+           <Button variant="ghost" size="icon" asChild>
+            <Link href="/dashboard/notifications">
+              <Bell />
+              <span className="sr-only">Notifications</span>
+            </Link>
+          </Button>
         </header>
         <div className="flex flex-1 min-h-0">
           <TicketList

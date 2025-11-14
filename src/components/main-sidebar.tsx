@@ -33,7 +33,6 @@ export function MainSidebar() {
   
   const footerMenuItems = [
     { href: "/dashboard/help", icon: LifeBuoy, label: "Help & Support" },
-    { href: "/dashboard/notifications", icon: Bell, label: "Notifications" },
   ];
 
   return (
