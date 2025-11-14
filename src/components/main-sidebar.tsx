@@ -5,13 +5,12 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { MessageCircle, LayoutGrid, BarChart3, SlidersHorizontal, Users, Settings, Bell, LifeBuoy, ShieldAlert, BookOpen, Bot, PieChart, CheckCircle, Search, Code } from "lucide-react";
+import { MessageCircle, LayoutGrid, BarChart3, SlidersHorizontal, Users, Settings, LifeBuoy, ShieldAlert, BookOpen, Bot, PieChart, CheckCircle, Search, Code, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { usePathname } from "next/navigation";
-import { Button } from "./ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 export function MainSidebar() {
   const pathname = usePathname();
@@ -32,7 +31,7 @@ export function MainSidebar() {
   ];
   
   const footerMenuItems = [
-    { href: "/dashboard/help", icon: LifeBuoy, label: "Help & Support" },
+    // Help & Support is moved to the profile dropdown
   ];
 
   return (
@@ -76,16 +75,41 @@ export function MainSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
-        <div className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-sidebar-accent">
-            <Avatar className="h-9 w-9">
-                <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Jane Doe" />
-                <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col text-sm overflow-hidden group-data-[collapsible=icon]:hidden">
-                <span className="font-semibold truncate">Jane Doe</span>
-                <span className="text-muted-foreground truncate">jane.doe@example.com</span>
-            </div>
-        </div>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                 <div className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-sidebar-accent cursor-pointer">
+                    <Avatar className="h-9 w-9">
+                        <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Jane Doe" />
+                        <AvatarFallback>JD</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col text-sm overflow-hidden group-data-[collapsible=icon]:hidden">
+                        <span className="font-semibold truncate">Jane Doe</span>
+                        <span className="text-muted-foreground truncate">jane.doe@example.com</span>
+                    </div>
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuItem asChild>
+                    <Link href="/dashboard/settings">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Edit Profile</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href="/dashboard/help">
+                        <LifeBuoy className="mr-2 h-4 w-4" />
+                        <span>Help & Support</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                     <Link href="/login">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Log out</span>
+                    </Link>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarFooter>
     </Sidebar>
   );
