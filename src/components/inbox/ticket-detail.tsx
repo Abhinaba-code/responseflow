@@ -117,8 +117,8 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
   }
 
   return (
-    <div className="flex flex-1 flex-col h-full">
-      <header className="p-4 border-b">
+    <div className="flex flex-1 flex-col h-full min-w-0">
+      <header className="p-4 border-b flex-shrink-0">
         <h2 className="font-semibold text-lg truncate">{ticket.subject}</h2>
         <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
           <div className="flex items-center gap-1">
@@ -168,7 +168,7 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
           </div>
         </ScrollArea>
 
-        <aside className="w-80 border-l bg-secondary/50">
+        <aside className="w-80 border-l bg-secondary/50 flex-shrink-0">
           <ScrollArea className="h-full">
             <div className="p-4 space-y-4">
               <Card>
@@ -224,7 +224,7 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
         </aside>
       </div>
 
-      <footer className="p-4 border-t">
+      <footer className="p-4 border-t flex-shrink-0">
         <div className="relative">
           <Textarea
             placeholder="Type your reply here..."
