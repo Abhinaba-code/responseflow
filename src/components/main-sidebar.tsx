@@ -30,10 +30,6 @@ export function MainSidebar() {
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
   
-  const footerMenuItems = [
-    { href: "/dashboard/help", icon: LifeBuoy, label: "Help & Support" },
-  ];
-
   return (
     <Sidebar>
       <SidebarHeader>
@@ -59,23 +55,6 @@ export function MainSidebar() {
           </SidebarMenuItem>
         ))}
       </SidebarMenu>
-      
-      <SidebarFooter className="mt-auto">
-         {footerMenuItems.map((item) => (
-          <SidebarMenuItem key={item.href}>
-            <SidebarMenuButton
-              asChild
-              isActive={pathname === item.href}
-              tooltip={{ children: item.label }}
-            >
-              <Link href={item.href}>
-                <item.icon />
-                <span>{item.label}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
-      </SidebarFooter>
     </Sidebar>
   );
 }
