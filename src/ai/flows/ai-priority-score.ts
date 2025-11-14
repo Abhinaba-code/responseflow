@@ -11,7 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const CalculatePriorityScoreInputSchema = z.object({
+const CalculatePriorityScoreInputSchema = z.object({
   subject: z.string().describe('The subject of the ticket.'),
   message: z.string().describe('The content of the latest message in the ticket.'),
   channel: z.string().describe('The channel through which the ticket was received (e.g., email, twitter, live_chat).'),

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
-import type { Ticket } from "@/lib/types";
+import type { Ticket, Sentiment } from "@/lib/types";
 import { calculatePriorityScoreAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

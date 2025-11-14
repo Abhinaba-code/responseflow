@@ -2,7 +2,7 @@
 
 import { generateReplySuggestions } from "@/ai/flows/ai-suggested-replies";
 import { summarizeTicket } from "@/ai/flows/ai-summarize-ticket";
-import { calculatePriorityScore, CalculatePriorityScoreInputSchema } from "@/ai/flows/ai-priority-score";
+import { calculatePriorityScore, type CalculatePriorityScoreInput } from "@/ai/flows/ai-priority-score";
 import { z } from "zod";
 
 const SuggestRepliesInput = z.object({
@@ -38,7 +38,21 @@ export async function summarizeTicketAction(input: z.infer<typeof SummarizeTicke
   }
 }
 
-export async function calculatePriorityScoreAction(input: z.infer<typeof CalculatePriorityScoreInputSchema>) {
+const CalculatePriorityScoreInputSchema = z.object({
+  subject: z.string(),
+  message: z.string(),
+  channel: z.string(),
+  sentiment: z.enum(['Positive', 'Neutral', 'Negative']),
+  tags: z.array(z.string()).optional(),
+  slaDue: z.string(),
+});
+
+
+export async function calculatePriorityScoreAction(input: CalculatePriorityScoreInput) {
+   const parsedInput = CalculatePriorityScoreInputSchema.safeParse(input);
+    if (!parsedInput.success) {
+      return { success: false, error: "Invalid input." };
+    }
   try {
     const result = await calculatePriorityScore(input);
     return { success: true, ...result };
