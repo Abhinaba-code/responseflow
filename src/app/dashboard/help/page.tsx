@@ -1,6 +1,5 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { LifeBuoy, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { LifeBuoy, Mail, Phone, User } from "lucide-react";
 import Link from "next/link";
 
 export default function HelpPage() {
@@ -47,15 +46,24 @@ export default function HelpPage() {
             <CardHeader>
               <CardTitle>Contact Support</CardTitle>
               <CardDescription>
-                Can't find the answer you're looking for? Our team is here to help.
+                Can't find the answer you're looking for? Contact Abhinaba Roy Pradhan directly.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-                <Button asChild>
-                    <Link href="mailto:support@responseflow.io">
-                        <Mail className="mr-2 h-4 w-4"/> Email Support
+            <CardContent className="space-y-4">
+                <div className="flex items-center gap-4">
+                    <User className="h-5 w-5 text-muted-foreground" />
+                    <p>Abhinaba Roy Pradhan</p>
+                </div>
+                 <div className="flex items-center gap-4">
+                    <Mail className="h-5 w-5 text-muted-foreground" />
+                    <Link href="mailto:abhinabapradhan@gmail.com" className="text-primary hover:underline">
+                        abhinabapradhan@gmail.com
                     </Link>
-                </Button>
+                </div>
+                 <div className="flex items-center gap-4">
+                    <Phone className="h-5 w-5 text-muted-foreground" />
+                    <p>+91 6295869078</p>
+                </div>
             </CardContent>
           </Card>
         </div>
