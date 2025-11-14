@@ -2,6 +2,7 @@
 
 import { generateReplySuggestions } from "@/ai/flows/ai-suggested-replies";
 import { summarizeTicket } from "@/ai/flows/ai-summarize-ticket";
+import { calculatePriorityScore, CalculatePriorityScoreInputSchema } from "@/ai/flows/ai-priority-score";
 import { z } from "zod";
 
 const SuggestRepliesInput = z.object({
@@ -34,5 +35,15 @@ export async function summarizeTicketAction(input: z.infer<typeof SummarizeTicke
   } catch (error) {
     console.error(error);
     return { success: false, error: "Failed to generate summary." };
+  }
+}
+
+export async function calculatePriorityScoreAction(input: z.infer<typeof CalculatePriorityScoreInputSchema>) {
+  try {
+    const result = await calculatePriorityScore(input);
+    return { success: true, ...result };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Failed to calculate priority score." };
   }
 }

@@ -3,3 +3,4 @@ config();
 
 import '@/ai/flows/ai-suggested-replies.ts';
 import '@/ai/flows/ai-summarize-ticket.ts';
+import '@/ai/flows/ai-priority-score.ts';
