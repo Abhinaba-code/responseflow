@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import type { Ticket } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -46,6 +46,19 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
   const [summary, setSummary] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [reply, setReply] = useState("");
+  const [formattedLastUpdate, setFormattedLastUpdate] = useState("");
+  const [formattedMessageTimestamps, setFormattedMessageTimestamps] = useState<{[key: string]: string}>({});
+
+  useEffect(() => {
+    if (ticket) {
+      setFormattedLastUpdate(format(new Date(ticket.lastUpdate), "PPp"));
+      const timestamps = ticket.messages.reduce((acc, message) => {
+        acc[message.id] = format(new Date(message.timestamp), "p");
+        return acc;
+      }, {} as {[key: string]: string});
+      setFormattedMessageTimestamps(timestamps);
+    }
+  }, [ticket]);
 
   const handleSummarize = () => {
     if (!ticket) return;
@@ -105,7 +118,7 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
             <span>{ticket.channel.replace("_", " ")}</span>
           </div>
           <span>&middot;</span>
-          <span>{format(new Date(ticket.lastUpdate), "PPp")}</span>
+          <span>{formattedLastUpdate}</span>
           <div className="ml-auto flex items-center gap-3">
             <Badge variant="outline" className={cn(priorityClasses[ticket.priority])}>
               {ticket.priority}
@@ -139,7 +152,7 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
                 >
                   <p className="text-sm">{message.text}</p>
                    <p className={cn("text-xs mt-1", message.author === 'user' ? 'text-muted-foreground' : 'text-primary-foreground/70')}>
-                    {format(new Date(message.timestamp), "p")}
+                    {formattedMessageTimestamps[message.id]}
                   </p>
                 </div>
               </div>
