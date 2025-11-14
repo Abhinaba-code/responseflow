@@ -13,7 +13,7 @@ export default function NotificationsPage() {
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-full bg-background">
       <header className="flex h-16 items-center justify-between border-b bg-background px-6">
         <h1 className="text-xl font-semibold flex items-center gap-2">
             <Bell className="h-6 w-6"/>

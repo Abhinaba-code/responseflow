@@ -4,14 +4,14 @@ import Link from "next/link";
 
 export default function HelpPage() {
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-full bg-background">
       <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
         <h1 className="text-xl font-semibold flex items-center gap-2">
           <LifeBuoy className="h-6 w-6" />
           Help & Support
         </h1>
       </header>
-      <main className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6">
         <div className="max-w-4xl mx-auto">
           <Card>
             <CardHeader>
@@ -67,7 +67,7 @@ export default function HelpPage() {
             </CardContent>
           </Card>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

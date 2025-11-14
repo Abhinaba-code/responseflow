@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 export default function TeamsPage() {
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-full bg-background">
       <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
         <h1 className="text-xl font-semibold">Team & Workload</h1>
       </header>

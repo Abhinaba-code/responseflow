@@ -8,11 +8,11 @@ import { CSATChart } from "@/components/analytics/csat-chart";
 
 export default function AnalyticsPage() {
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-full bg-background">
       <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
         <h1 className="text-xl font-semibold">Analytics Dashboard</h1>
       </header>
-      <main className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <KPICard
             title="Avg Time to First Response"
@@ -78,7 +78,7 @@ export default function AnalyticsPage() {
             </CardContent>
           </Card>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

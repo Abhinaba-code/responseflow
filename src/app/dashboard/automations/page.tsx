@@ -3,11 +3,11 @@ import { ArrowRight, Mail, MessageCircle, Tag, UserPlus, Bell } from "lucide-rea
 
 export default function AutomationsPage() {
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-full bg-background">
       <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
         <h1 className="text-xl font-semibold">Automation Builder</h1>
       </header>
-      <main className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6">
         <p className="text-muted-foreground mb-6">Create powerful, no-code workflows to automate your support processes.</p>
 
         <div className="space-y-8">
@@ -80,7 +80,7 @@ export default function AutomationsPage() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

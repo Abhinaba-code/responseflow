@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 
 export default function SettingsPage() {
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-full bg-background">
       <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
         <h1 className="text-xl font-semibold">Settings</h1>
       </header>
-      <main className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6">
         <Tabs defaultValue="theme">
           <TabsList className="grid w-full grid-cols-4 max-w-lg">
             <TabsTrigger value="profile">Profile</TabsTrigger>
@@ -81,7 +81,7 @@ export default function SettingsPage() {
             </Card>
           </TabsContent>
         </Tabs>
-      </main>
+      </div>
     </div>
   );
 }
