@@ -22,7 +22,7 @@ const priorityClasses: { [key in Ticket['priority']]: string } = {
 
 export function TicketList({ tickets, selectedTicketId, onSelectTicket }: TicketListProps) {
   return (
-    <aside className="w-full md:w-1/3 lg:w-2/5 xl:w-1/3 border-r h-full">
+    <aside className="w-[380px] border-r h-full flex-shrink-0">
       <ScrollArea className="h-full">
         <div className="p-2 space-y-1">
           {tickets.map((ticket) => (
