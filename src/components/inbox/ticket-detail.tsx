@@ -22,11 +22,13 @@ import {
   Paperclip,
   Sparkles,
   Users,
+  BrainCircuit
 } from "lucide-react";
 import { SlaTimer } from "@/components/sla-timer";
 import { format } from "date-fns";
-import { suggestRepliesAction, summarizeTicketAction } from "@/app/actions";
+import { suggestRepliesAction, summarizeTicketAction, calculatePriorityScoreAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
+import { PriorityScore } from "./priority-score";
 
 type TicketDetailProps = {
   ticket: Ticket | undefined;
@@ -51,12 +53,14 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
 
   useEffect(() => {
     if (ticket) {
+      // Safely format dates only on the client
       setFormattedLastUpdate(format(new Date(ticket.lastUpdate), "PPp"));
       const timestamps = ticket.messages.reduce((acc, message) => {
         acc[message.id] = format(new Date(message.timestamp), "p");
         return acc;
       }, {} as {[key: string]: string});
       setFormattedMessageTimestamps(timestamps);
+      
       // Reset AI features on ticket change
       setSummary("");
       setSuggestions([]);
@@ -100,7 +104,7 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
   
   if (!ticket) {
     return (
-      <div className="hidden md:flex flex-1 items-center justify-center h-[calc(100vh-4rem)]">
+      <div className="hidden md:flex flex-1 items-center justify-center h-full">
         <div className="text-center">
           <CornerDownLeft className="mx-auto h-12 w-12 text-muted-foreground" />
           <h3 className="mt-4 text-lg font-medium">No ticket selected</h3>
@@ -113,7 +117,7 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
   }
 
   return (
-    <div className="hidden md:flex flex-1 flex-col h-[calc(100vh-4rem)]">
+    <div className="flex flex-1 flex-col h-[calc(100vh-4rem)]">
       <header className="p-4 border-b">
         <h2 className="font-semibold text-lg truncate">{ticket.subject}</h2>
         <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
@@ -184,6 +188,8 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
                   </div>
                 </CardContent>
               </Card>
+
+              <PriorityScore ticket={ticket} />
 
               <Card>
                 <CardHeader className="p-4">
