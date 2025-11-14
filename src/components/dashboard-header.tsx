@@ -1,11 +1,12 @@
 "use client";
 
-import { Bell, LifeBuoy, LogOut, PanelLeft, Settings, User } from "lucide-react";
+import { Bell, LifeBuoy, LogOut, PanelLeft, Search, Settings, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { useSidebar } from "./ui/sidebar";
 import Link from "next/link";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Input } from "./ui/input";
 
 export function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
@@ -18,6 +19,14 @@ export function DashboardHeader() {
             <span className="sr-only">Toggle Sidebar</span>
         </Button>
       </div>
+
+       <div className="w-full max-w-md">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Search everything..." className="pl-9" />
+            </div>
+       </div>
+
        <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" asChild>
             <Link href="/dashboard/notifications">
