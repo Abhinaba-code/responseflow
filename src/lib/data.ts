@@ -1,4 +1,4 @@
-import { addMinutes, subDays, subHours } from 'date-fns';
+import { addMinutes, subDays, subHours, subMinutes } from 'date-fns';
 import type { Ticket, Agent, Priority, Sentiment, Tag, Channel, Status } from './types';
 
 const now = new Date();
