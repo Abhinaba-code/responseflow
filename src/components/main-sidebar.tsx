@@ -23,6 +23,11 @@ export function MainSidebar() {
     { href: "/dashboard/teams", icon: Users, label: "Teams" },
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
+  
+  const footerMenuItems = [
+    { href: "/dashboard/help", icon: LifeBuoy, label: "Help & Support" },
+    { href: "/dashboard/notifications", icon: Bell, label: "Notifications" },
+  ];
 
   return (
     <Sidebar>
@@ -51,18 +56,20 @@ export function MainSidebar() {
       </SidebarMenu>
       
       <SidebarFooter className="mt-auto">
-         <SidebarMenuItem>
-          <SidebarMenuButton tooltip={{ children: "Help & Support" }}>
-            <LifeBuoy />
-            <span>Help & Support</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-         <SidebarMenuItem>
-          <SidebarMenuButton tooltip={{ children: "Notifications" }}>
-            <Bell />
-            <span>Notifications</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+         {footerMenuItems.map((item) => (
+          <SidebarMenuItem key={item.href}>
+            <SidebarMenuButton
+              asChild
+              isActive={pathname === item.href}
+              tooltip={{ children: item.label }}
+            >
+              <Link href={item.href}>
+                <item.icon />
+                <span>{item.label}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))}
         <div className="flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-sidebar-accent">
             <Avatar className="h-9 w-9">
                 <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Jane Doe" />
