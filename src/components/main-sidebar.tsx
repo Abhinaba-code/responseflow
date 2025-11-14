@@ -27,7 +27,6 @@ export function MainSidebar() {
     { href: "/dashboard/quality", icon: CheckCircle, label: "Quality" },
     { href: "/dashboard/search", icon: Search, label: "Search" },
     { href: "/dashboard/developer", icon: Code, label: "Developer" },
-    { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
   
   return (
