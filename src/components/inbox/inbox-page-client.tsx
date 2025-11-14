@@ -39,7 +39,7 @@ export function InboxPageClient({ initialTickets }: { initialTickets: Ticket[] }
   const selectedTicket = tickets.find(t => t.id === selectedTicketId);
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-background">
+    <div className="flex h-full bg-background">
       <div className="flex flex-col flex-1 min-w-0">
         <div className="flex flex-1 min-h-0">
           <TicketList

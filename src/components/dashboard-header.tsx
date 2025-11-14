@@ -7,23 +7,48 @@ import Link from "next/link";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Input } from "./ui/input";
+import { usePathname } from "next/navigation";
+import { MainSidebar } from "./main-sidebar";
+
+const pageTitles: Record<string, string> = {
+    '/dashboard': 'Unified Inbox',
+    '/dashboard/analytics': 'Analytics',
+    '/dashboard/automations': 'Automations',
+    '/dashboard/customers': 'Customers',
+    '/dashboard/developer': 'Developer',
+    '/dashboard/help': 'Help & Support',
+    '/dashboard/incidents': 'Incidents',
+    '/dashboard/knowledge': 'Knowledge',
+    '/dashboard/notifications': 'Notifications',
+    '/dashboard/playbooks': 'Playbooks',
+    '/dashboard/quality': 'Quality',
+    '/dashboard/search': 'Search',
+    '/dashboard/settings': 'Settings',
+    '/dashboard/teams': 'Teams & Workload',
+};
+
 
 export function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
+  const pathname = usePathname();
+  const title = pageTitles[pathname] || "Dashboard";
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background px-6">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSidebar}>
             <PanelLeft />
             <span className="sr-only">Toggle Sidebar</span>
         </Button>
+        <h1 className="text-xl font-semibold">{title}</h1>
       </div>
 
-       <div className="w-full max-w-md">
-            <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Search everything..." className="pl-9" />
+       <div className="flex-1 flex justify-center px-4">
+            <div className="w-full max-w-md">
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search everything..." className="pl-9" />
+                </div>
             </div>
        </div>
 

@@ -4,9 +4,6 @@ import { ArrowRight, Mail, MessageCircle, Tag, UserPlus, Bell } from "lucide-rea
 export default function AutomationsPage() {
   return (
     <div className="flex flex-col h-full bg-background">
-      <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
-        <h1 className="text-xl font-semibold">Automation Builder</h1>
-      </header>
       <div className="flex-1 overflow-auto p-6">
         <p className="text-muted-foreground mb-6">Create powerful, no-code workflows to automate your support processes.</p>
 

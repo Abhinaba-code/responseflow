@@ -14,16 +14,6 @@ export default function NotificationsPage() {
 
   return (
     <div className="flex flex-col h-full bg-background">
-      <header className="flex h-16 items-center justify-between border-b bg-background px-6">
-        <h1 className="text-xl font-semibold flex items-center gap-2">
-            <Bell className="h-6 w-6"/>
-            Notifications
-        </h1>
-        <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5"/>
-            <span className="sr-only">Notification Settings</span>
-        </Button>
-      </header>
       <main className="flex-1 overflow-auto p-6 grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-4">
             {notifications.map(n => (

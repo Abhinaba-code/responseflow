@@ -5,12 +5,6 @@ import Link from "next/link";
 export default function HelpPage() {
   return (
     <div className="flex flex-col h-full bg-background">
-      <header className="flex h-16 items-center gap-4 border-b bg-background px-6">
-        <h1 className="text-xl font-semibold flex items-center gap-2">
-          <LifeBuoy className="h-6 w-6" />
-          Help & Support
-        </h1>
-      </header>
       <div className="flex-1 overflow-auto p-6">
         <div className="max-w-4xl mx-auto">
           <Card>
@@ -24,7 +18,7 @@ export default function HelpPage() {
               <div className="border-b pb-4">
                 <h3 className="font-semibold">How do I connect a new channel?</h3>
                 <p className="text-muted-foreground">
-                  Navigate to Settings &gt; Channels and click the "Add Channel" button. Follow the on-screen instructions to authorize ResponseFlow to access your account.
+                  Navigate to Settings > Channels and click the "Add Channel" button. Follow the on-screen instructions to authorize ResponseFlow to access your account.
                 </p>
               </div>
               <div className="border-b pb-4">
