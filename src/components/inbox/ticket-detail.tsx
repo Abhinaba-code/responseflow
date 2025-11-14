@@ -57,6 +57,10 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
         return acc;
       }, {} as {[key: string]: string});
       setFormattedMessageTimestamps(timestamps);
+      // Reset AI features on ticket change
+      setSummary("");
+      setSuggestions([]);
+      setReply("");
     }
   }, [ticket]);
 

@@ -1,18 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Ticket } from "@/lib/types";
 import { TicketList } from "./ticket-list";
 import { TicketDetail } from "./ticket-detail";
 import { PanelLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSidebar } from "../ui/sidebar";
+import { tickets as initialTicketsData } from "@/lib/data";
+
+const LOCAL_STORAGE_KEY = "responseflow-tickets";
 
 export function InboxPageClient({ initialTickets }: { initialTickets: Ticket[] }) {
-  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(initialTickets[0]?.id || null);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const { toggleSidebar } = useSidebar();
-  
-  const selectedTicket = initialTickets.find(t => t.id === selectedTicketId);
+
+  useEffect(() => {
+    // This effect runs only on the client
+    const storedTickets = localStorage.getItem(LOCAL_STORAGE_KEY);
+    let ticketsToLoad: Ticket[];
+
+    if (storedTickets) {
+      try {
+        ticketsToLoad = JSON.parse(storedTickets);
+      } catch (error) {
+        console.error("Failed to parse tickets from local storage", error);
+        ticketsToLoad = initialTicketsData;
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(ticketsToLoad));
+      }
+    } else {
+      ticketsToLoad = initialTicketsData;
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(ticketsToLoad));
+    }
+    
+    setTickets(ticketsToLoad);
+    if (ticketsToLoad.length > 0) {
+      setSelectedTicketId(ticketsToLoad[0].id);
+    }
+  }, []);
+
+  const selectedTicket = tickets.find(t => t.id === selectedTicketId);
 
   return (
     <div className="flex h-screen bg-background">
@@ -26,7 +54,7 @@ export function InboxPageClient({ initialTickets }: { initialTickets: Ticket[] }
         </header>
         <div className="flex flex-1 min-h-0">
           <TicketList
-            tickets={initialTickets}
+            tickets={tickets}
             selectedTicketId={selectedTicketId}
             onSelectTicket={setSelectedTicketId}
           />
