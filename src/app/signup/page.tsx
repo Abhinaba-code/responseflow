@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-sm mx-auto">
@@ -13,35 +13,31 @@ export default function LoginPage() {
           <div className="flex justify-center items-center mb-4">
              <MessageCircle className="h-8 w-8 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-headline">Welcome to ResponseFlow</CardTitle>
-          <CardDescription>Enter your credentials to access your dashboard.</CardDescription>
+          <CardTitle className="text-2xl font-headline">Create an Account</CardTitle>
+          <CardDescription>Enter your information to get started.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" defaultValue="demo@responseflow.io" />
+              <Label htmlFor="full-name">Full Name</Label>
+              <Input id="full-name" placeholder="Jane Doe" />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" placeholder="m@example.com" />
+            </div>
+            <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
-                <Link href="#" className="ml-auto inline-block text-sm underline">
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input id="password" type="password" defaultValue="demopassword" />
+              <Input id="password" type="password" />
             </div>
             <Button type="submit" className="w-full" asChild>
-              <Link href="/dashboard">Sign In</Link>
-            </Button>
-            <Button variant="outline" className="w-full">
-              Sign in with Google
+              <Link href="/dashboard">Create Account</Link>
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/signup" className="underline">
-              Sign up
+            Already have an account?{" "}
+            <Link href="/login" className="underline">
+              Sign in
             </Link>
           </div>
         </CardContent>
