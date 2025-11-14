@@ -40,15 +40,13 @@ export function InboxPageClient({ initialTickets }: { initialTickets: Ticket[] }
 
   return (
     <div className="flex h-full bg-background">
-      <div className="flex flex-col flex-1 min-w-0">
-        <div className="flex flex-1 min-h-0">
+      <div className="flex flex-1 min-w-0">
           <TicketList
             tickets={tickets}
             selectedTicketId={selectedTicketId}
             onSelectTicket={setSelectedTicketId}
           />
           <TicketDetail ticket={selectedTicket} />
-        </div>
       </div>
     </div>
   );
