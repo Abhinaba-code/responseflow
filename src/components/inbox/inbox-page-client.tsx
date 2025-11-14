@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import type { Ticket } from "@/lib/types";
 import { TicketList } from "./ticket-list";
 import { TicketDetail } from "./ticket-detail";
-import { Bell, PanelLeft, User, LifeBuoy, LogOut } from "lucide-react";
+import { Bell, PanelLeft, User, LifeBuoy, LogOut, Settings } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSidebar } from "../ui/sidebar";
 import { tickets as initialTicketsData } from "@/lib/data";
@@ -84,6 +84,12 @@ export function InboxPageClient({ initialTickets }: { initialTickets: Ticket[] }
                         <Link href="/dashboard/help">
                             <LifeBuoy className="mr-2 h-4 w-4" />
                             <span>Help & Support</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/dashboard/settings">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
