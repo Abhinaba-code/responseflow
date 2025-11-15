@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Loader2, Send } from "lucide-react";
-import { chatbotAction } from "@/app/actions";
+import { Bot, Loader2, Send, Mic, Volume2 } from "lucide-react";
+import { chatbotAction, textToSpeechAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { ChatMessage } from "./chat-message";
 
@@ -24,8 +24,10 @@ export function ChatbotWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const { toast } = useToast();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -36,6 +38,31 @@ export function ChatbotWidget() {
     }
   }, [messages]);
 
+  const playAudio = (audioDataUri: string) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    const audio = new Audio(audioDataUri);
+    audioRef.current = audio;
+    setIsSpeaking(true);
+    audio.play();
+    audio.onended = () => {
+      setIsSpeaking(false);
+    };
+  };
+
+  const handleTextToSpeech = async (text: string) => {
+    const result = await textToSpeechAction({ text });
+    if (result.success && result.audio) {
+      playAudio(result.audio);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Speech Error",
+        description: result.error || "Could not play audio.",
+      });
+    }
+  };
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -55,6 +82,7 @@ export function ChatbotWidget() {
           ...newMessages,
           { role: "model", content: result.response },
         ]);
+        await handleTextToSpeech(result.response);
       } else {
         toast({
           variant: "destructive",
@@ -83,9 +111,22 @@ export function ChatbotWidget() {
         className="w-[400px] h-[500px] p-0 flex flex-col"
         sideOffset={10}
       >
-        <div className="p-4 border-b flex items-center gap-2">
-            <Bot className="h-5 w-5 text-primary" />
-            <h3 className="font-semibold">AI Assistant</h3>
+        <div className="p-4 border-b flex items-center justify-between">
+            <div className="flex items-center gap-2">
+                <Bot className="h-5 w-5 text-primary" />
+                <h3 className="font-semibold">AI Assistant</h3>
+            </div>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => {
+                const lastMessage = messages.findLast(m => m.role === 'model');
+                if (lastMessage) handleTextToSpeech(lastMessage.content);
+              }}
+              disabled={isSpeaking}
+            >
+              <Volume2 className="h-5 w-5" />
+            </Button>
         </div>
         <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="p-4 space-y-4">
@@ -113,16 +154,26 @@ export function ChatbotWidget() {
                   handleSend();
                 }
               }}
-              className="pr-12 min-h-[60px]"
+              className="pr-20 min-h-[60px]"
             />
-            <Button
-              size="icon"
-              className="absolute top-1/2 -translate-y-1/2 right-3 h-8 w-8"
-              onClick={handleSend}
-              disabled={isPending}
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+            <div className="absolute top-1/2 -translate-y-1/2 right-3 flex items-center">
+                 <Button
+                    size="icon"
+                    variant="ghost"
+                    disabled={isPending}
+                    // onClick={handleVoiceInput}
+                >
+                    <Mic className="h-4 w-4" />
+                </Button>
+                <Button
+                size="icon"
+                className="h-8 w-8"
+                onClick={handleSend}
+                disabled={isPending}
+                >
+                <Send className="h-4 w-4" />
+                </Button>
+            </div>
           </div>
         </div>
       </PopoverContent>

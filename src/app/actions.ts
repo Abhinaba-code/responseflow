@@ -4,6 +4,7 @@ import { generateReplySuggestions } from "@/ai/flows/ai-suggested-replies";
 import { summarizeTicket } from "@/ai/flows/ai-summarize-ticket";
 import { calculatePriorityScore, type CalculatePriorityScoreInput } from "@/ai/flows/ai-priority-score";
 import { chatbot, type ChatbotInput } from "@/ai/flows/ai-chatbot";
+import { textToSpeech } from "@/ai/flows/ai-text-to-speech";
 import { z } from "zod";
 
 const SuggestRepliesInput = z.object({
@@ -87,4 +88,22 @@ export async function chatbotAction(input: ChatbotInput) {
     console.error(error);
     return { success: false, error: "Failed to get a response from the chatbot." };
   }
+}
+
+const TextToSpeechActionInput = z.object({
+    text: z.string(),
+});
+
+export async function textToSpeechAction(input: z.infer<typeof TextToSpeechActionInput>) {
+    const parsedInput = TextToSpeechActionInput.safeParse(input);
+    if (!parsedInput.success) {
+        return { success: false, error: "Invalid input." };
+    }
+    try {
+        const result = await textToSpeech(input);
+        return { success: true, audio: result.audio };
+    } catch (error) {
+        console.error(error);
+        return { success: false, error: "Failed to convert text to speech." };
+    }
 }
