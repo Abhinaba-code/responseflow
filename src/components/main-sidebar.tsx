@@ -23,25 +23,25 @@ export function MainSidebar() {
     {
       group: "Tools",
       items: [
-        { href: "/dashboard", icon: LayoutGrid, label: "Inbox", plan: "pro" },
-        { href: "/dashboard/incidents", icon: ShieldAlert, label: "Incidents", plan: "pro" },
-        { href: "/dashboard/customers", icon: Users, label: "Customers", plan: "pro" },
-        { href: "/dashboard/knowledge", icon: BookOpen, label: "Knowledge", plan: "pro" },
-        { href: "/dashboard/search", icon: Search, label: "Search", plan: "pro" },
-        { href: "/dashboard/developer", icon: Code, label: "Developer", plan: "pro" },
+        { href: "/dashboard", icon: LayoutGrid, label: "Inbox" },
+        { href: "/dashboard/incidents", icon: ShieldAlert, label: "Incidents" },
+        { href: "/dashboard/customers", icon: Users, label: "Customers" },
+        { href: "/dashboard/knowledge", icon: BookOpen, label: "Knowledge" },
+        { href: "/dashboard/search", icon: Search, label: "Search" },
+        { href: "/dashboard/developer", icon: Code, label: "Developer" },
       ],
     },
     {
       group: "AI",
       items: [
-        { href: "/dashboard/playbooks", icon: Bot, label: "Playbooks", plan: "pro" },
+        { href: "/dashboard/playbooks", icon: Bot, label: "Playbooks" },
         { href: "/dashboard/automations", icon: SlidersHorizontal, label: "Automations", plan: "enterprise" },
       ],
     },
     {
         group: "Reporting",
         items: [
-            { href: "/dashboard/analytics", icon: BarChart3, label: "Analytics", plan: "pro" },
+            { href: "/dashboard/analytics", icon: BarChart3, label: "Analytics" },
             { href: "/dashboard/teams", icon: PieChart, label: "Workload", plan: "enterprise" },
             { href: "/dashboard/quality", icon: CheckCircle, label: "Quality", plan: "enterprise" },
         ]

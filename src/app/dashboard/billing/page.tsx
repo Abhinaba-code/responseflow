@@ -5,10 +5,6 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const proFeatures = [
-    "Unified Inbox",
-    "Incidents Management",
-    "Customer Management",
-    "Knowledge Base",
     "Search",
     "Developer API",
     "Playbooks (AI)",
@@ -25,7 +21,7 @@ const enterpriseFeatures = [
 
 
 export default function BillingPage() {
-    const currentPlan = ""; // This would come from user data
+    const currentPlan = "Pro"; // This would come from user data
 
   return (
     <div className="flex flex-col h-full bg-background">
