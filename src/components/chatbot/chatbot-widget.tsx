@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useTransition, useRef, useEffect } from "react";
@@ -169,7 +168,7 @@ export function ChatbotWidget() {
       <PopoverContent
         side="top"
         align="end"
-        className="w-[400px] h-[500px] p-0 flex flex-col"
+        className="w-[350px] h-[450px] p-0 flex flex-col"
         sideOffset={10}
       >
         <div className="p-4 border-b flex items-center justify-between">
