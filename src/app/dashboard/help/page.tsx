@@ -40,7 +40,7 @@ export default function HelpPage() {
             <CardHeader>
               <CardTitle>Contact Support</CardTitle>
               <CardDescription>
-                Can't find the answer you're looking for? Contact Abhinaba Roy Pradhan directly.
+                Can't find the answer you're looking for? Contact me directly.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Mail, Phone, MapPin } from 'lucide-react';
+import { MessageCircle, Mail, Phone, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ContactPage() {
@@ -37,16 +37,20 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-4">
+                    <User className="h-5 w-5 text-muted-foreground" />
+                    <p>Abhinaba Roy Pradhan</p>
+                  </div>
+                  <div className="flex items-center gap-4">
                     <Mail className="h-5 w-5 text-muted-foreground" />
-                    <p>support@responseflow.io</p>
+                    <p>abhinabapradhan@gmail.com</p>
                   </div>
                   <div className="flex items-center gap-4">
                     <Phone className="h-5 w-5 text-muted-foreground" />
-                    <p>+1 (555) 123-4567</p>
+                    <p>+91 6295869078</p>
                   </div>
                   <div className="flex items-center gap-4">
                     <MapPin className="h-5 w-5 text-muted-foreground" />
-                    <p>123 Innovation Drive, Tech City, 54321</p>
+                    <p>Siliguri, West Bengal, India</p>
                   </div>
                 </CardContent>
               </Card>
