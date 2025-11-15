@@ -64,8 +64,8 @@ export default function BillingPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                <Card className={cn("border-2 relative", plan === "Pro" ? "border-primary" : "")}>
-                    {plan === 'Pro' && <Badge className="absolute -top-3 right-4">Current Plan</Badge>}
+                <Card className={cn("border-2 relative", (plan === "Pro" || plan === "Enterprise") ? "border-primary" : "")}>
+                    {(plan === 'Pro' || plan === 'Enterprise') && <Badge className="absolute -top-3 right-4">{plan === 'Pro' ? 'Current Plan' : 'Included'}</Badge>}
                     <CardHeader>
                         <CardTitle className="text-2xl">Pro</CardTitle>
                         <CardDescription>For growing teams that need powerful tools and AI capabilities.</CardDescription>
@@ -83,8 +83,8 @@ export default function BillingPage() {
                                 ))}
                             </ul>
                         </div>
-                        <Button className="w-full" disabled={plan === "Pro"} onClick={() => handleUpgrade("Pro")}>
-                            {plan === "Pro" ? "Current Plan" : "Upgrade to Pro"}
+                        <Button className="w-full" disabled={plan === "Pro" || plan === "Enterprise"} onClick={() => handleUpgrade("Pro")}>
+                            {plan === "Enterprise" ? "Included in Enterprise" : plan === "Pro" ? "Current Plan" : "Upgrade to Pro"}
                         </Button>
                     </CardContent>
                 </Card>
