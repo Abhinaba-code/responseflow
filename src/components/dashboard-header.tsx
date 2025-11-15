@@ -78,13 +78,13 @@ export function DashboardHeader() {
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background px-6">
+      <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background px-4 md:px-6">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={toggleSidebar} className="md:flex">
               <PanelLeft />
               <span className="sr-only">Toggle Sidebar</span>
           </Button>
-          <h1 className="text-xl font-semibold">{title}</h1>
+          <h1 className="text-xl font-semibold hidden md:block">{title}</h1>
         </div>
 
         <div className="flex-1 flex justify-center px-4">
@@ -99,7 +99,7 @@ export function DashboardHeader() {
         <div className="flex items-center gap-2">
           <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2">
+                  <Button variant="ghost" className="hidden md:flex items-center gap-2">
                       <Wallet />
                       <span>₹{balance.toFixed(2)}</span>
                   </Button>
@@ -179,3 +179,5 @@ export function DashboardHeader() {
     </>
   );
 }
+
+    

@@ -1,11 +1,20 @@
+
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Mail, MessageCircle, Check } from 'lucide-react';
+import { ArrowRight, Mail, MessageCircle, Check, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { ChannelIcon } from '@/components/channel-icon';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const planCosts = {
     Pro: 59,
@@ -29,6 +38,8 @@ const enterpriseFeatures = [
 
 
 export default function Home() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -36,7 +47,7 @@ export default function Home() {
           <MessageCircle className="h-7 w-7 text-primary" />
           <span className="font-headline">ResponseFlow</span>
         </Link>
-        <nav className="flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-4">
           <Button variant="ghost" asChild>
               <Link href="/pricing">Pricing</Link>
           </Button>
@@ -49,10 +60,28 @@ export default function Home() {
             </Link>
           </Button>
         </nav>
+        <div className="md:hidden">
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <nav className="flex flex-col gap-4 mt-8">
+                <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Pricing</Link>
+                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Sign In</Link>
+                <Button asChild>
+                  <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
+                </Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </header>
 
       <main className="flex-1">
-        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-20 text-center">
           <Badge variant="outline" className="mb-4">
             AI-Powered Audience Engagement
           </Badge>
@@ -63,7 +92,7 @@ export default function Home() {
             Unify email, social, chat, and community into one intelligent inbox.
             Powered by AI to help you respond faster and smarter.
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" asChild>
               <Link href="/signup">Sign Up for Free</Link>
             </Button>
@@ -86,8 +115,8 @@ export default function Home() {
                     </div>
                     <p className="text-sm text-muted-foreground">Unified Inbox - ResponseFlow</p>
                   </div>
-                  <div className="flex-1 flex gap-4 pt-4 min-h-0">
-                    <div className="w-1/3 border-r pr-4">
+                  <div className="flex-1 flex flex-col md:flex-row gap-4 pt-4 min-h-0">
+                    <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r pr-0 md:pr-4 pb-4 md:pb-0">
                       <h2 className="font-semibold text-lg mb-2">Inbox</h2>
                       <div className="space-y-2">
                         <div className="p-2 rounded-lg bg-secondary flex items-start gap-3">
@@ -122,7 +151,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <div className="w-2/3">
+                    <div className="w-full md:w-2/3">
                       <h2 className="font-semibold text-lg mb-2">Conversation</h2>
                        <div className="border rounded-lg p-4 space-y-4">
                           <div className="flex items-center gap-2">
@@ -207,3 +236,5 @@ export default function Home() {
     </div>
   );
 }
+
+    

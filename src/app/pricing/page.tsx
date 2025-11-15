@@ -1,8 +1,18 @@
+
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, MessageCircle, Check } from 'lucide-react';
+import { ArrowRight, MessageCircle, Check, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
 
 const planCosts = {
     Pro: 59,
@@ -25,14 +35,16 @@ const enterpriseFeatures = [
 ];
 
 export default function PricingPage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl">
           <MessageCircle className="h-7 w-7 text-primary" />
           <span className="font-headline">ResponseFlow</span>
         </Link>
-        <nav className="flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-4">
           <Button variant="ghost" asChild>
               <Link href="/pricing">Pricing</Link>
           </Button>
@@ -45,6 +57,24 @@ export default function PricingPage() {
             </Link>
           </Button>
         </nav>
+        <div className="md:hidden">
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <nav className="flex flex-col gap-4 mt-8">
+                <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Pricing</Link>
+                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Sign In</Link>
+                <Button asChild>
+                  <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
+                </Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </header>
 
       <main className="flex-1">
@@ -124,3 +154,5 @@ export default function PricingPage() {
     </div>
   );
 }
+
+    
