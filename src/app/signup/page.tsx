@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Home } from "lucide-react";
 import Link from "next/link";
 import { useUser } from '@/context/user-context';
 
@@ -60,6 +60,12 @@ export default function SignupPage() {
             </div>
             <Button type="submit" className="w-full" onClick={handleCreateAccount}>
               Create Account
+            </Button>
+            <Button variant="outline" className="w-full" asChild>
+              <Link href="/">
+                <Home className="mr-2 h-4 w-4" />
+                Back to Home
+              </Link>
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
