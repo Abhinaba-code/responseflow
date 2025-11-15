@@ -1,5 +1,5 @@
 import { addMinutes, subDays, subHours, subMinutes } from 'date-fns';
-import type { Ticket, Agent, Priority, Sentiment, Tag, Channel, Status, Incident, Customer } from './types';
+import type { Ticket, Agent, Priority, Sentiment, Tag, Channel, Status, Incident, Customer, Playbook } from './types';
 
 const now = new Date();
 
@@ -355,6 +355,32 @@ export const csatData = [
   { name: '3 Stars', value: 89, fill: 'var(--color-warning)' },
   { name: '1-2 Stars', value: 23, fill: 'var(--color-danger)' },
 ];
+
+export const initialPlaybooks: Playbook[] = [
+  {
+    id: "pb-1",
+    name: "API Latency Spike",
+    description: "Standard procedure for when the main API is experiencing high latency.",
+    trigger: "Incident Created: Severity is Critical OR High",
+    actions: [
+      { id: "act-1", type: "Notify", description: "Notify #dev-ops channel in Slack" },
+      { id: "act-2", type: "Update", description: "Create a public status page update" },
+      { id: "act-3", type: "Assign", description: "Assign to On-Call Engineer" },
+    ],
+  },
+  {
+    id: "pb-2",
+    name: "Failed Deployment",
+    description: "Handles the response for a failed production deployment.",
+    trigger: "Webhook received from CI/CD pipeline",
+    actions: [
+      { id: "act-1", type: "Page", description: "Page the Lead Developer" },
+      { id: "act-2", type: "Declare", description: "Declare a High severity incident" },
+      { id: "act-3", type: "Rollback", description: "Initiate automated rollback procedure" },
+    ],
+  },
+];
+
 
 // Type guard for channel
 export function isChannel(value: string): value is Channel {

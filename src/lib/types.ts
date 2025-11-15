@@ -82,3 +82,17 @@ export type Customer = {
   avgSentiment: Sentiment;
   lastContact: string;
 };
+
+export type PlaybookAction = {
+  id: string;
+  type: string;
+  description: string;
+};
+
+export type Playbook = {
+  id: string;
+  name: string;
+  description: string;
+  trigger: string;
+  actions: PlaybookAction[];
+};
