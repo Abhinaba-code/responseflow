@@ -43,8 +43,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { withPlanGuard } from "@/components/with-plan-guard";
 
-export default function TeamsPage() {
+function TeamsPage() {
   const [agents, setAgents] = useState<Agent[]>(initialAgents);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -212,3 +213,5 @@ export default function TeamsPage() {
     </div>
   );
 }
+
+export default withPlanGuard(TeamsPage, "Enterprise");

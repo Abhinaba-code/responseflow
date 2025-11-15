@@ -10,11 +10,11 @@ import {
   SidebarSeparator,
   SidebarContent,
 } from "@/components/ui/sidebar";
-import { MessageCircle, LayoutGrid, BarChart3, SlidersHorizontal, Users, Settings, LifeBuoy, ShieldAlert, BookOpen, Bot, PieChart, CheckCircle, Search, Code, User, LogOut, Lock, Crown } from "lucide-react";
+import { MessageCircle, LayoutGrid, BarChart3, SlidersHorizontal, Users, Settings, LifeBuoy, ShieldAlert, BookOpen, Bot, PieChart, CheckCircle, Code } from "lucide-react";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { usePathname } from "next/navigation";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Badge } from "./ui/badge";
+
 
 export function MainSidebar() {
   const pathname = usePathname();
@@ -27,22 +27,22 @@ export function MainSidebar() {
         { href: "/dashboard/incidents", icon: ShieldAlert, label: "Incidents" },
         { href: "/dashboard/customers", icon: Users, label: "Customers" },
         { href: "/dashboard/knowledge", icon: BookOpen, label: "Knowledge" },
-        { href: "/dashboard/developer", icon: Code, label: "Developer", plan: "pro" },
+        { href: "/dashboard/developer", icon: Code, label: "Developer", plan: "Pro" },
       ],
     },
     {
       group: "AI",
       items: [
-        { href: "/dashboard/playbooks", icon: Bot, label: "Playbooks", plan: "pro" },
-        { href: "/dashboard/automations", icon: SlidersHorizontal, label: "Automations", plan: "enterprise" },
+        { href: "/dashboard/playbooks", icon: Bot, label: "Playbooks", plan: "Pro" },
+        { href: "/dashboard/automations", icon: SlidersHorizontal, label: "Automations", plan: "Enterprise" },
       ],
     },
     {
         group: "Reporting",
         items: [
-            { href: "/dashboard/analytics", icon: BarChart3, label: "Analytics", plan: "pro" },
-            { href: "/dashboard/teams", icon: PieChart, label: "Workload", plan: "enterprise" },
-            { href: "/dashboard/quality", icon: CheckCircle, label: "Quality", plan: "enterprise" },
+            { href: "/dashboard/analytics", icon: BarChart3, label: "Analytics", plan: "Pro" },
+            { href: "/dashboard/teams", icon: PieChart, label: "Workload", plan: "Enterprise" },
+            { href: "/dashboard/quality", icon: CheckCircle, label: "Quality", plan: "Enterprise" },
         ]
     }
   ];
@@ -75,8 +75,18 @@ export function MainSidebar() {
                               <item.icon />
                               <span>{item.label}</span>
                           </div>
-                          {item.plan === "pro" && <Lock className="h-3 w-3 text-yellow-500" />}
-                          {item.plan === "enterprise" && <Crown className="h-3 w-3 text-purple-500" />}
+                           {item.plan && (
+                            <Badge 
+                              variant="outline" 
+                              className={`
+                                text-xs h-5 px-1.5
+                                ${item.plan === "Pro" ? "text-yellow-600 border-yellow-500/50" : ""}
+                                ${item.plan === "Enterprise" ? "text-purple-600 border-purple-500/50" : ""}
+                              `}
+                            >
+                              {item.plan}
+                            </Badge>
+                          )}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

@@ -34,8 +34,9 @@ import { MoreVertical, PlusCircle, Trash2, Pencil, Bot } from "lucide-react";
 import { initialPlaybooks, type Playbook, type PlaybookAction } from "@/lib/data";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { withPlanGuard } from "@/components/with-plan-guard";
 
-export default function PlaybooksPage() {
+function PlaybooksPage() {
   const [playbooks, setPlaybooks] = useState<Playbook[]>(initialPlaybooks);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
@@ -197,6 +198,9 @@ export default function PlaybooksPage() {
     </div>
   );
 }
+
+export default withPlanGuard(PlaybooksPage, "Pro");
+
 
 // Form Dialog Component
 function PlaybookFormDialog({

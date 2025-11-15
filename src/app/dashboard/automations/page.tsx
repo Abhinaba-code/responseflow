@@ -1,7 +1,10 @@
+'use client';
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ArrowRight, Mail, MessageCircle, Tag, UserPlus, Bell } from "lucide-react";
+import { withPlanGuard } from "@/components/with-plan-guard";
 
-export default function AutomationsPage() {
+function AutomationsPage() {
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-auto p-6">
@@ -81,3 +84,5 @@ export default function AutomationsPage() {
     </div>
   );
 }
+
+export default withPlanGuard(AutomationsPage, "Enterprise");

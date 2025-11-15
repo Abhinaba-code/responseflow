@@ -1,8 +1,11 @@
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePlan } from "@/context/plan-context";
+import { Badge } from "@/components/ui/badge";
 
 const proFeatures = [
     "Search",
@@ -19,9 +22,8 @@ const enterpriseFeatures = [
     "Dedicated Support"
 ];
 
-
 export default function BillingPage() {
-    const currentPlan = "Free"; // This would come from user data
+    const { plan, setPlan } = usePlan();
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -33,7 +35,8 @@ export default function BillingPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                <Card className={cn("border-2", currentPlan === "Pro" ? "border-primary" : "")}>
+                <Card className={cn("border-2 relative", plan === "Pro" ? "border-primary" : "")}>
+                    {plan === 'Pro' && <Badge className="absolute -top-3 right-4">Current Plan</Badge>}
                     <CardHeader>
                         <CardTitle className="text-2xl">Pro</CardTitle>
                         <CardDescription>For growing teams that need powerful tools and AI capabilities.</CardDescription>
@@ -51,13 +54,14 @@ export default function BillingPage() {
                                 ))}
                             </ul>
                         </div>
-                        <Button className="w-full" disabled={currentPlan === "Pro"}>
-                            {currentPlan === "Pro" ? "Current Plan" : "Upgrade to Pro"}
+                        <Button className="w-full" disabled={plan === "Pro"} onClick={() => setPlan("Pro")}>
+                            {plan === "Pro" ? "Current Plan" : "Upgrade to Pro"}
                         </Button>
                     </CardContent>
                 </Card>
 
-                 <Card className={cn("border-2", currentPlan === "Enterprise" ? "border-primary" : "")}>
+                 <Card className={cn("border-2 relative", plan === "Enterprise" ? "border-primary" : "")}>
+                    {plan === 'Enterprise' && <Badge className="absolute -top-3 right-4">Current Plan</Badge>}
                     <CardHeader>
                         <CardTitle className="text-2xl">Enterprise</CardTitle>
                         <CardDescription>For large organizations requiring advanced automation and reporting.</CardDescription>
@@ -75,11 +79,16 @@ export default function BillingPage() {
                                 ))}
                             </ul>
                         </div>
-                         <Button className="w-full" disabled={currentPlan === "Enterprise"}>
-                            {currentPlan === "Enterprise" ? "Current Plan" : "Upgrade to Enterprise"}
+                         <Button className="w-full" disabled={plan === "Enterprise"} onClick={() => setPlan("Enterprise")}>
+                            {plan === "Enterprise" ? "Current Plan" : "Upgrade to Enterprise"}
                         </Button>
                     </CardContent>
                 </Card>
+            </div>
+             <div className="text-center mt-8">
+                <Button variant="link" onClick={() => setPlan("Free")} disabled={plan === "Free"}>
+                    Downgrade to Free
+                </Button>
             </div>
         </div>
       </div>

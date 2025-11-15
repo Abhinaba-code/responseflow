@@ -1,3 +1,5 @@
+'use client';
+
 import { KPICard } from "@/components/analytics/kpi-card";
 import { kpiData } from "@/lib/data";
 import { BarChart3, Clock, Smile, Inbox } from "lucide-react";
@@ -5,8 +7,9 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ResponseTimeChart } from "@/components/analytics/response-time-chart";
 import { TicketsByChannelChart } from "@/components/analytics/tickets-by-channel-chart";
 import { CSATChart } from "@/components/analytics/csat-chart";
+import { withPlanGuard } from "@/components/with-plan-guard";
 
-export default function AnalyticsPage() {
+function AnalyticsPage() {
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-auto p-6">
@@ -79,3 +82,5 @@ export default function AnalyticsPage() {
     </div>
   );
 }
+
+export default withPlanGuard(AnalyticsPage, "Pro");
