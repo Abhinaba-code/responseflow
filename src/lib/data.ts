@@ -201,6 +201,55 @@ export const incidents: Incident[] = [
       },
     ],
   },
+    {
+    id: 'inc-004',
+    title: 'Social Media Channel Integration Delays',
+    status: 'Monitoring',
+    severity: 'Medium',
+    createdAt: subHours(now, 8).toISOString(),
+    updates: [
+      {
+        timestamp: subHours(now, 8).toISOString(),
+        status: 'Investigating',
+        description: 'We are investigating reports of delays in social media channel integrations.',
+      },
+      {
+        timestamp: subHours(now, 6).toISOString(),
+        status: 'Identified',
+        description: 'The issue has been identified with a third-party provider. We are working with them to resolve it.',
+      },
+      {
+        timestamp: subHours(now, 3).toISOString(),
+        status: 'Monitoring',
+        description: 'A fix has been implemented and we are monitoring the results.',
+      },
+    ],
+  },
+  {
+    id: 'inc-005',
+    title: 'Email Processing Slowdown',
+    status: 'Resolved',
+    severity: 'High',
+    createdAt: subDays(now, 1).toISOString(),
+    resolvedAt: subDays(now, 1).toISOString(),
+    updates: [
+       {
+        timestamp: subDays(now, 1),
+        status: 'Investigating',
+        description: 'We are investigating reports of slow email processing.',
+      },
+      {
+        timestamp: subDays(now, 1),
+        status: 'Identified',
+        description: 'The issue has been identified as a problem with our email processing queue.',
+      },
+       {
+        timestamp: subDays(now, 1),
+        status: 'Resolved',
+        description: 'The email processing queue has been cleared and the issue is resolved.',
+      },
+    ],
+  },
 ];
 
 
