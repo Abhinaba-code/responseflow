@@ -36,7 +36,7 @@ export function DashboardHeader() {
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background px-6">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSidebar}>
+        <Button variant="ghost" size="icon" onClick={toggleSidebar}>
             <PanelLeft />
             <span className="sr-only">Toggle Sidebar</span>
         </Button>
