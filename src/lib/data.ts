@@ -1,5 +1,5 @@
 import { addMinutes, subDays, subHours, subMinutes } from 'date-fns';
-import type { Ticket, Agent, Priority, Sentiment, Tag, Channel, Status, Incident } from './types';
+import type { Ticket, Agent, Priority, Sentiment, Tag, Channel, Status, Incident, Customer } from './types';
 
 const now = new Date();
 
@@ -19,7 +19,7 @@ export const tickets: Ticket[] = [
     id: 'tkt-001',
     subject: 'My order #512 hasn\'t arrived yet',
     channel: 'twitter',
-    requester: { name: 'Alex Smith', avatar: 'AS' },
+    requester: { name: 'Alex Smith', avatar: 'AS', email: 'alex.smith@example.com' },
     priority: 'P0',
     status: 'Open',
     sentiment: 'Negative',
@@ -36,7 +36,7 @@ export const tickets: Ticket[] = [
     id: 'tkt-002',
     subject: 'Feature Request: Bulk export',
     channel: 'email',
-    requester: { name: 'Brenda Chen', avatar: 'BC' },
+    requester: { name: 'Brenda Chen', avatar: 'BC', email: 'brenda.chen@example.com' },
     priority: 'P2',
     status: 'Open',
     sentiment: 'Neutral',
@@ -54,7 +54,7 @@ export const tickets: Ticket[] = [
     id: 'tkt-003',
     subject: 'Having trouble logging in',
     channel: 'live_chat',
-    requester: { name: 'Carlos Diaz', avatar: 'CD' },
+    requester: { name: 'Carlos Diaz', avatar: 'CD', email: 'carlos.diaz@example.com' },
     priority: 'P1',
     status: 'Open',
     sentiment: 'Negative',
@@ -71,7 +71,7 @@ export const tickets: Ticket[] = [
     id: 'tkt-004',
     subject: 'Thank you for the amazing support!',
     channel: 'whatsapp',
-    requester: { name: 'Diana Ross', avatar: 'DR' },
+    requester: { name: 'Diana Ross', avatar: 'DR', email: 'diana.ross@example.com' },
     priority: 'P3',
     status: 'Resolved',
     sentiment: 'Positive',
@@ -89,7 +89,7 @@ export const tickets: Ticket[] = [
     id: 'tkt-005',
     subject: 'Billing question for my subscription',
     channel: 'email',
-    requester: { name: 'Ethan Hunt', avatar: 'EH' },
+    requester: { name: 'Ethan Hunt', avatar: 'EH', email: 'ethan.hunt@example.com' },
     priority: 'P1',
     status: 'Pending',
     sentiment: 'Neutral',
@@ -106,7 +106,7 @@ export const tickets: Ticket[] = [
     id: 'tkt-006',
     subject: 'My post was removed?',
     channel: 'discord',
-    requester: { name: 'Frankie Adams', avatar: 'FA' },
+    requester: { name: 'Frankie Adams', avatar: 'FA', email: 'frankie.adams@example.com' },
     priority: 'P1',
     status: 'On-hold',
     sentiment: 'Negative',
@@ -124,7 +124,7 @@ export const tickets: Ticket[] = [
     id: 'tkt-007',
     subject: 'Can I get a demo?',
     channel: 'facebook',
-    requester: { name: 'Grace Lee', avatar: 'GL' },
+    requester: { name: 'Grace Lee', avatar: 'GL', email: 'grace.lee@example.com' },
     priority: 'P2',
     status: 'Resolved',
     sentiment: 'Neutral',
@@ -142,7 +142,7 @@ export const tickets: Ticket[] = [
     id: 'tkt-008',
     subject: 'IG comment on latest post',
     channel: 'instagram',
-    requester: { name: 'Henry Wilson', avatar: 'HW' },
+    requester: { name: 'Henry Wilson', avatar: 'HW', email: 'henry.wilson@example.com' },
     priority: 'P3',
     status: 'Open',
     sentiment: 'Positive',
@@ -152,6 +152,23 @@ export const tickets: Ticket[] = [
     unread: true,
     messages: [
       { id: 'msg-1', author: 'user', authorName: 'Henry Wilson', authorAvatar: 'HW', text: 'This looks awesome! 🔥', timestamp: subMinutes(now, 10).toISOString() },
+    ],
+  },
+  {
+    id: 'tkt-009',
+    subject: 'Re: My order #512 hasn\'t arrived yet',
+    channel: 'twitter',
+    requester: { name: 'Alex Smith', avatar: 'AS', email: 'alex.smith@example.com' },
+    priority: 'P0',
+    status: 'Open',
+    sentiment: 'Negative',
+    assignee: agents[1],
+    tags: ['Complaint', 'VIP'],
+    slaDue: addMinutes(now, 25).toISOString(),
+    lastUpdate: subMinutes(now, 1).toISOString(),
+    unread: true,
+    messages: [
+      { id: 'msg-1', author: 'user', authorName: 'Alex Smith', authorAvatar: 'AS', text: 'Any update??????', timestamp: subMinutes(now, 1).toISOString() },
     ],
   },
 ];
@@ -255,6 +272,56 @@ export const incidents: Incident[] = [
     ],
   },
 ];
+
+
+const sentimentScores: { [key in Sentiment]: number } = {
+  Positive: 1,
+  Neutral: 0,
+  Negative: -1,
+};
+
+const getAvgSentiment = (sentiments: Sentiment[]): Sentiment => {
+  if (sentiments.length === 0) return "Neutral";
+  const score =
+    sentiments.reduce((acc, s) => acc + sentimentScores[s], 0) /
+    sentiments.length;
+  if (score > 0.5) return "Positive";
+  if (score < -0.5) return "Negative";
+  return "Neutral";
+};
+
+// Derive customers from tickets
+const customersMap = new Map<string, { tickets: Ticket[], email: string, avatar: string }>();
+tickets.forEach((ticket) => {
+  if (!customersMap.has(ticket.requester.name)) {
+    customersMap.set(ticket.requester.name, { tickets: [], email: ticket.requester.email, avatar: ticket.requester.avatar });
+  }
+  customersMap.get(ticket.requester.name)!.tickets.push(ticket);
+});
+
+export const initialCustomers: Customer[] = Array.from(customersMap.entries()).map(
+  ([name, data], index) => {
+    const sortedTickets = data.tickets.sort(
+      (a, b) =>
+        new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime()
+    );
+    const lastContact = sortedTickets.length > 0 ? sortedTickets[0].lastUpdate : new Date(0).toISOString();
+    const sentiments = data.tickets.map((t) => t.sentiment);
+
+    return {
+      id: `cust-${index + 1}`,
+      name,
+      email: data.email,
+      avatar: data.avatar,
+      totalTickets: data.tickets.length,
+      openTickets: data.tickets.filter(
+        (t) => t.status === "Open" || t.status === "Pending"
+      ).length,
+      avgSentiment: getAvgSentiment(sentiments),
+      lastContact,
+    };
+  }
+);
 
 
 // Analytics Data

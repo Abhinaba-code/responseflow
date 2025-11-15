@@ -29,6 +29,7 @@ export type Ticket = {
   requester: {
     name: string;
     avatar: string;
+    email: string;
   };
   priority: Priority;
   status: Status;
@@ -69,4 +70,15 @@ export type Incident = {
     status: IncidentStatus;
     description: string;
   }[];
+};
+
+export type Customer = {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  totalTickets: number;
+  openTickets: number;
+  avgSentiment: Sentiment;
+  lastContact: string;
 };
