@@ -75,6 +75,8 @@ export default function DeveloperPage() {
   ]);
   const [newKey, setNewKey] = useState<string | null>(null);
   const [showKey, setShowKey] = useState(false);
+  const [isWebhookDialogOpen, setIsWebhookDialogOpen] = useState(false);
+  const [newWebhookUrl, setNewWebhookUrl] = useState("");
 
   const generateNewKey = () => {
     const generated = `rf_prod_${[...Array(24)].map(() => Math.random().toString(36)[2]).join('')}`;
@@ -99,6 +101,23 @@ export default function DeveloperPage() {
         title: "API Key Deleted",
         description: "The API key has been permanently removed.",
         variant: "destructive",
+    });
+  };
+  
+  const handleAddWebhook = () => {
+    if (!newWebhookUrl) return;
+    const newWebhook: Webhook = {
+      id: `hook-${Date.now()}`,
+      url: newWebhookUrl,
+      status: 'active',
+      events: ['ticket.created', 'ticket.updated'], // Default events
+    };
+    setWebhooks([...webhooks, newWebhook]);
+    setIsWebhookDialogOpen(false);
+    setNewWebhookUrl('');
+    toast({
+        title: "Webhook Endpoint Added",
+        description: "The new endpoint has been successfully configured.",
     });
   };
 
@@ -184,7 +203,7 @@ export default function DeveloperPage() {
             </CardHeader>
             <CardContent>
                 <div className="flex justify-end mb-4">
-                     <Dialog>
+                     <Dialog open={isWebhookDialogOpen} onOpenChange={setIsWebhookDialogOpen}>
                         <DialogTrigger asChild>
                             <Button><PlusCircle className="mr-2" />Add Endpoint</Button>
                         </DialogTrigger>
@@ -196,7 +215,12 @@ export default function DeveloperPage() {
                             <div className="space-y-4 py-4">
                                 <div className="space-y-1">
                                     <Label htmlFor="webhook-url">Endpoint URL</Label>
-                                    <Input id="webhook-url" placeholder="https://your-service.com/webhook" />
+                                    <Input 
+                                      id="webhook-url" 
+                                      placeholder="https://your-service.com/webhook" 
+                                      value={newWebhookUrl}
+                                      onChange={(e) => setNewWebhookUrl(e.target.value)}
+                                    />
                                 </div>
                                 <div className="space-y-1">
                                     <Label>Events to send</Label>
@@ -204,8 +228,8 @@ export default function DeveloperPage() {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button variant="outline">Cancel</Button>
-                                <Button>Add Endpoint</Button>
+                                <Button variant="outline" onClick={() => setIsWebhookDialogOpen(false)}>Cancel</Button>
+                                <Button onClick={handleAddWebhook}>Add Endpoint</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
