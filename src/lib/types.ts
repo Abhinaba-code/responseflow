@@ -53,3 +53,20 @@ export type Agent = {
   capacity: number;
   skills: string[];
 };
+
+export type IncidentStatus = 'Investigating' | 'Identified' | 'Monitoring' | 'Resolved';
+export type IncidentSeverity = 'Critical' | 'High' | 'Medium' | 'Low';
+
+export type Incident = {
+  id: string;
+  title: string;
+  status: IncidentStatus;
+  severity: IncidentSeverity;
+  createdAt: string;
+  resolvedAt?: string;
+  updates: {
+    timestamp: string;
+    status: IncidentStatus;
+    description: string;
+  }[];
+};

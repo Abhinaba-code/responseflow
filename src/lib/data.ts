@@ -1,5 +1,5 @@
 import { addMinutes, subDays, subHours, subMinutes } from 'date-fns';
-import type { Ticket, Agent, Priority, Sentiment, Tag, Channel, Status } from './types';
+import type { Ticket, Agent, Priority, Sentiment, Tag, Channel, Status, Incident } from './types';
 
 const now = new Date();
 
@@ -148,6 +148,57 @@ export const tickets: Ticket[] = [
     unread: true,
     messages: [
       { id: 'msg-1', author: 'user', authorName: 'Henry Wilson', authorAvatar: 'HW', text: 'This looks awesome! 🔥', timestamp: subMinutes(now, 10).toISOString() },
+    ],
+  },
+];
+
+export const incidents: Incident[] = [
+  {
+    id: 'inc-001',
+    title: 'API Latency Issues',
+    status: 'Investigating',
+    severity: 'High',
+    createdAt: subMinutes(now, 45).toISOString(),
+    updates: [
+      {
+        timestamp: subMinutes(now, 45).toISOString(),
+        status: 'Investigating',
+        description: 'We are investigating reports of increased API latency.',
+      },
+    ],
+  },
+  {
+    id: 'inc-002',
+    title: 'Dashboard Login Failures',
+    status: 'Identified',
+    severity: 'Critical',
+    createdAt: subHours(now, 2).toISOString(),
+    updates: [
+       {
+        timestamp: subHours(now, 2).toISOString(),
+        status: 'Investigating',
+        description: 'We are seeing an increase in login failures and are investigating.',
+      },
+      {
+        timestamp: subMinutes(now, 90).toISOString(),
+        status: 'Identified',
+        description: 'The issue has been identified as a problem with our authentication provider. We are working on a fix.',
+      },
+    ],
+  },
+  {
+    id: 'inc-003',
+    title: 'Scheduled Maintenance',
+    status: 'Resolved',
+    severity: 'Low',
+    createdAt: subDays(now, 2).toISOString(),
+    resolvedAt: subDays(now, 2).toISOString(),
+    updates: [
+      {
+        timestamp: subDays(now, 2).toISOString(),
+        status: 'Resolved',
+        description: 'Scheduled maintenance has been completed.',
+      },
     ],
   },
 ];
