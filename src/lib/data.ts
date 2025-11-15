@@ -8,6 +8,10 @@ export const agents: Agent[] = [
   { id: 'agent-2', name: 'Bob Williams', avatar: 'BW', status: 'Online', currentLoad: 5, capacity: 5, skills: ['Social Media', 'VIP'] },
   { id: 'agent-3', name: 'Charlie Brown', avatar: 'CB', status: 'Offline', currentLoad: 0, capacity: 5, skills: ['General Inquiry'] },
   { id: 'agent-4', name: 'Diana Miller', avatar: 'DM', status: 'Busy', currentLoad: 4, capacity: 4, skills: ['Tech Support', 'Escalations'] },
+  { id: 'agent-5', name: 'Ethan Rodriguez', avatar: 'ER', status: 'Online', currentLoad: 2, capacity: 5, skills: ['Billing', 'Spanish'] },
+  { id: 'agent-6', name: 'Fiona Garcia', avatar: 'FG', status: 'Offline', currentLoad: 0, capacity: 5, skills: ['Social Media', 'French'] },
+  { id: 'agent-7', name: 'George Clark', avatar: 'GC', status: 'Busy', currentLoad: 5, capacity: 5, skills: ['Tech Support', 'VIP'] },
+  { id: 'agent-8', name: 'Hannah Lewis', avatar: 'HL', status: 'Online', currentLoad: 1, capacity: 5, skills: ['General Inquiry', 'German'] },
 ];
 
 export const tickets: Ticket[] = [
@@ -234,17 +238,17 @@ export const incidents: Incident[] = [
     resolvedAt: subDays(now, 1).toISOString(),
     updates: [
        {
-        timestamp: subDays(now, 1),
+        timestamp: subDays(now, 1).toISOString(),
         status: 'Investigating',
         description: 'We are investigating reports of slow email processing.',
       },
       {
-        timestamp: subDays(now, 1),
+        timestamp: subDays(now, 1).toISOString(),
         status: 'Identified',
         description: 'The issue has been identified as a problem with our email processing queue.',
       },
        {
-        timestamp: subDays(now, 1),
+        timestamp: subDays(now, 1).toISOString(),
         status: 'Resolved',
         description: 'The email processing queue has been cleared and the issue is resolved.',
       },
