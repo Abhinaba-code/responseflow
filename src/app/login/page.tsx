@@ -7,10 +7,10 @@ import Link from "next/link";
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
+    <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <Card className="w-full max-w-sm mx-auto">
         <CardHeader className="text-center">
-          <div className="flex justify-center items-center mb-4">
+          <div className="flex justify-center items-center mb-2">
              <MessageCircle className="h-8 w-8 text-primary" />
           </div>
           <CardTitle className="text-2xl font-headline">Welcome to ResponseFlow</CardTitle>

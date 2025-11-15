@@ -31,30 +31,30 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
+    <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <Card className="w-full max-w-sm mx-auto">
         <CardHeader className="text-center">
-          <div className="flex justify-center items-center mb-4">
+          <div className="flex justify-center items-center mb-2">
              <MessageCircle className="h-8 w-8 text-primary" />
           </div>
           <CardTitle className="text-2xl font-headline">Create an Account</CardTitle>
           <CardDescription>Enter your information to get started.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
+          <div className="grid gap-3">
+            <div className="grid gap-1.5">
               <Label htmlFor="full-name">Full Name</Label>
               <Input id="full-name" placeholder="Jane Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} />
             </div>
-            <div className="grid gap-2">
+            <div className="grid gap-1.5">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" placeholder="m@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
-            <div className="grid gap-2">
+            <div className="grid gap-1.5">
                 <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
-            <div className="grid gap-2">
+            <div className="grid gap-1.5">
                 <Label htmlFor="confirm-password">Confirm Password</Label>
               <Input id="confirm-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </div>
