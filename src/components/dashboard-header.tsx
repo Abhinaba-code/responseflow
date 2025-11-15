@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, LifeBuoy, LogOut, PanelLeft, Search, Settings, User, Wallet, PlusCircle, ArrowDownCircle, CreditCard } from "lucide-react";
+import { Bell, LifeBuoy, LogOut, PanelLeft, Search, Settings, User, Wallet, PlusCircle, ArrowDownCircle, CreditCard, History } from "lucide-react";
 import { Button } from "./ui/button";
 import { useSidebar } from "./ui/sidebar";
 import Link from "next/link";
@@ -32,6 +32,7 @@ const pageTitles: Record<string, string> = {
     '/dashboard/search': 'Search',
     '/dashboard/settings': 'Settings',
     '/dashboard/teams': 'Teams & Workload',
+    '/dashboard/history': 'Transaction History',
 };
 
 
@@ -165,6 +166,12 @@ export function DashboardHeader() {
                     <Link href="/dashboard/billing">
                         <CreditCard className="mr-2 h-4 w-4" />
                         <span>Billing</span>
+                    </Link>
+                  </DropdownMenuItem>
+                   <DropdownMenuItem asChild>
+                    <Link href="/dashboard/history">
+                        <History className="mr-2 h-4 w-4" />
+                        <span>History</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
