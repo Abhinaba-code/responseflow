@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useTransition, useRef, useEffect } from "react";
@@ -13,6 +14,7 @@ import { Bot, Loader2, Send, Mic, Volume2 } from "lucide-react";
 import { chatbotAction, textToSpeechAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { ChatMessage } from "./chat-message";
+import { cn } from "@/lib/utils";
 
 type Message = {
   role: "user" | "model";
@@ -25,9 +27,11 @@ export function ChatbotWidget() {
   const [input, setInput] = useState("");
   const [isPending, startTransition] = useTransition();
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const { toast } = useToast();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -37,6 +41,46 @@ export function ChatbotWidget() {
       });
     }
   }, [messages]);
+
+  useEffect(() => {
+    // SpeechRecognition is a browser-only API
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = "en-US";
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error", event.error);
+        toast({
+            variant: "destructive",
+            title: "Voice Error",
+            description: "Sorry, I couldn't understand that. Please try again.",
+        });
+        setIsListening(false);
+      };
+      
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Voice Not Supported",
+            description: "Your browser does not support voice recognition.",
+        });
+    }
+  }, [toast]);
 
   const playAudio = (audioDataUri: string) => {
     if (audioRef.current) {
@@ -61,6 +105,18 @@ export function ChatbotWidget() {
         title: "Speech Error",
         description: result.error || "Could not play audio.",
       });
+    }
+  };
+  
+  const handleVoiceInput = () => {
+    if (recognitionRef.current) {
+      if (isListening) {
+        recognitionRef.current.stop();
+        setIsListening(false);
+      } else {
+        recognitionRef.current.start();
+        setIsListening(true);
+      }
     }
   };
 
@@ -161,7 +217,8 @@ export function ChatbotWidget() {
                     size="icon"
                     variant="ghost"
                     disabled={isPending}
-                    // onClick={handleVoiceInput}
+                    onClick={handleVoiceInput}
+                    className={cn(isListening && "bg-red-500/20 text-red-500")}
                 >
                     <Mic className="h-4 w-4" />
                 </Button>
