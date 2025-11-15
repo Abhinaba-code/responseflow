@@ -99,20 +99,17 @@ export default function SettingsPage() {
 
 
     const handleToggleConnect = (channelName: string) => {
+        const channel = channels.find(c => c.name === channelName);
+        if (channel && !channel.connected) {
+             toast({
+                title: "Channel Connected",
+                description: `${channel.name} has been successfully connected.`,
+            });
+        }
         setChannels(prevChannels =>
-            prevChannels.map(channel => {
-                if (channel.name === channelName) {
-                    const wasConnected = channel.connected;
-                    if (!wasConnected) {
-                        toast({
-                            title: "Channel Connected",
-                            description: `${channel.name} has been successfully connected.`,
-                        });
-                    }
-                    return { ...channel, connected: !wasConnected };
-                }
-                return channel;
-            })
+            prevChannels.map(c => 
+                c.name === channelName ? { ...c, connected: !c.connected } : c
+            )
         );
     };
 
