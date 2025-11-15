@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useTransition, useRef, useEffect } from "react";
@@ -31,6 +32,20 @@ export function ChatbotWidget() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+  const widgetRef = useRef<HTMLButtonElement>(null);
+  const hasBeenDragged = useRef(false);
+
+  useEffect(() => {
+    // Set initial position to bottom right, ensures it runs only on client
+    setPosition({
+        x: window.innerWidth - 88, // 56px width + 2rem (32px) offset
+        y: window.innerHeight - 88, // 56px height + 2rem (32px) offset
+    });
+  }, []);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -155,12 +170,73 @@ export function ChatbotWidget() {
     });
   };
 
+  const onMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+    hasBeenDragged.current = false;
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+    };
+  };
+
+  const onMouseMove = (e: MouseEvent) => {
+    if (!isDragging || !widgetRef.current) return;
+    
+    const deltaX = e.clientX - dragStartRef.current.x;
+    const deltaY = e.clientY - dragStartRef.current.y;
+
+    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+        hasBeenDragged.current = true;
+    }
+
+    setPosition((prevPos) => {
+      const newX = prevPos.x + deltaX;
+      const newY = prevPos.y + deltaY;
+      return { x: newX, y: newY };
+    });
+    dragStartRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const onMouseUp = () => {
+    setIsDragging(false);
+    if (!hasBeenDragged.current) {
+        setIsOpen((prev) => !prev);
+    }
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
+    } else {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    }
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [isDragging]);
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
+          ref={widgetRef}
           size="icon"
-          className="rounded-full w-14 h-14 fixed bottom-6 right-6 shadow-lg"
+          className="rounded-full w-14 h-14 fixed shadow-lg cursor-grab active:cursor-grabbing"
+          style={{
+            top: position.y,
+            left: position.x,
+            transform: `translate(-50%, -50%)`,
+          }}
+          onMouseDown={onMouseDown}
+          onClick={(e) => {
+            if (hasBeenDragged.current) {
+                e.preventDefault();
+            }
+          }}
         >
           <Bot className="h-6 w-6" />
         </Button>
@@ -241,3 +317,5 @@ export function ChatbotWidget() {
     </Popover>
   );
 }
+
+    
