@@ -1,4 +1,7 @@
 
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,8 +9,38 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { MessageCircle, Mail, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ContactPage() {
+  const { toast } = useToast();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSendMessage = () => {
+    if (!firstName || !email || !message) {
+      toast({
+        variant: "destructive",
+        title: "Missing Information",
+        description: "Please fill out your name, email, and message.",
+      });
+      return;
+    }
+
+    toast({
+      title: "Message Sent!",
+      description: "Thanks for reaching out. We'll get back to you shortly.",
+    });
+
+    // Clear form
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setMessage('');
+  };
+
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
        <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -61,22 +94,22 @@ export default function ContactPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="first-name">First Name</Label>
-                      <Input id="first-name" placeholder="John" />
+                      <Input id="first-name" placeholder="John" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="last-name">Last Name</Label>
-                      <Input id="last-name" placeholder="Doe" />
+                      <Input id="last-name" placeholder="Doe" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="john.doe@example.com" />
+                    <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="message">Message</Label>
-                    <Textarea id="message" placeholder="Your message..." />
+                    <Textarea id="message" placeholder="Your message..." value={message} onChange={(e) => setMessage(e.target.value)} />
                   </div>
-                  <Button className="w-full">Send Message</Button>
+                  <Button className="w-full" onClick={handleSendMessage}>Send Message</Button>
                 </CardContent>
               </Card>
             </div>
