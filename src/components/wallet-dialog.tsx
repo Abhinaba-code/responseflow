@@ -67,7 +67,7 @@ export function WalletDialog({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="col-span-3"
-              placeholder="$0.00"
+              placeholder="₹0.00"
             />
           </div>
         </div>

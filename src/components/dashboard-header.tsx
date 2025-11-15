@@ -53,7 +53,7 @@ export function DashboardHeader() {
       setBalance(prev => prev + amount);
       toast({
         title: "Money Added",
-        description: `$${amount.toFixed(2)} has been added to your wallet.`,
+        description: `₹${amount.toFixed(2)} has been added to your wallet.`,
       });
     } else {
       if (amount > balance) {
@@ -67,7 +67,7 @@ export function DashboardHeader() {
       setBalance(prev => prev - amount);
       toast({
         title: "Money Withdrawn",
-        description: `$${amount.toFixed(2)} has been withdrawn from your wallet.`,
+        description: `₹${amount.toFixed(2)} has been withdrawn from your wallet.`,
       });
     }
   };
@@ -98,7 +98,7 @@ export function DashboardHeader() {
               <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2">
                       <Wallet />
-                      <span>${balance.toFixed(2)}</span>
+                      <span>₹{balance.toFixed(2)}</span>
                   </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>

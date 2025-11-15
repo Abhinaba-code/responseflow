@@ -23,8 +23,8 @@ import {
 
 const planCosts: { [key in Plan]: number } = {
     Free: 0,
-    Pro: 59,
-    Enterprise: 99,
+    Pro: 4900,
+    Enterprise: 8900,
 };
 
 const proFeatures = [
@@ -72,7 +72,7 @@ export default function BillingPage() {
         setPlan(planToUpgrade);
         toast({
             title: "Upgrade Successful!",
-            description: `You are now on the ${planToUpgrade} plan. $${cost.toFixed(2)} has been deducted from your wallet.`,
+            description: `You are now on the ${planToUpgrade} plan. ₹${cost.toFixed(2)} has been deducted from your wallet.`,
         });
         
         setIsConfirmingUpgrade(false);
@@ -87,7 +87,7 @@ export default function BillingPage() {
         setPlan("Free");
         toast({
             title: "Downgrade Successful",
-            description: `You are now on the Free plan. $${refundAmount.toFixed(2)} has been refunded to your wallet.`,
+            description: `You are now on the Free plan. ₹${refundAmount.toFixed(2)} has been refunded to your wallet.`,
         });
     };
 
@@ -107,7 +107,7 @@ export default function BillingPage() {
                     <CardHeader>
                         <CardTitle className="text-2xl">Pro</CardTitle>
                         <CardDescription>For growing teams that need powerful tools and AI capabilities.</CardDescription>
-                        <div className="text-4xl font-bold pt-4">${planCosts.Pro} <span className="text-base font-normal text-muted-foreground">/ month</span></div>
+                        <div className="text-4xl font-bold pt-4">₹{planCosts.Pro} <span className="text-base font-normal text-muted-foreground">/ month</span></div>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div>
@@ -132,7 +132,7 @@ export default function BillingPage() {
                     <CardHeader>
                         <CardTitle className="text-2xl">Enterprise</CardTitle>
                         <CardDescription>For large organizations requiring advanced automation and reporting.</CardDescription>
-                         <div className="text-4xl font-bold pt-4">${planCosts.Enterprise} <span className="text-base font-normal text-muted-foreground">/ month</span></div>
+                         <div className="text-4xl font-bold pt-4">₹{planCosts.Enterprise} <span className="text-base font-normal text-muted-foreground">/ month</span></div>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div>
@@ -166,7 +166,7 @@ export default function BillingPage() {
                 <AlertDialogTitle>Confirm Subscription Upgrade</AlertDialogTitle>
                 <AlertDialogDescription>
                     You are about to upgrade to the <strong>{planToUpgrade}</strong> plan. 
-                    This will deduct <strong>${planToUpgrade ? planCosts[planToUpgrade].toFixed(2) : '0.00'}</strong> from your wallet. 
+                    This will deduct <strong>₹{planToUpgrade ? planCosts[planToUpgrade].toFixed(2) : '0.00'}</strong> from your wallet. 
                     Do you wish to continue?
                 </AlertDialogDescription>
             </AlertDialogHeader>
