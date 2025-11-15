@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -92,6 +93,15 @@ export default function DeveloperPage() {
     })
   };
 
+  const deleteApiKey = (id: string) => {
+    setApiKeys(apiKeys.filter((key) => key.id !== id));
+    toast({
+        title: "API Key Deleted",
+        description: "The API key has been permanently removed.",
+        variant: "destructive",
+    });
+  };
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast({ title: "Copied to clipboard!" });
@@ -153,7 +163,7 @@ export default function DeveloperPage() {
                         <TableCell>{apiKey.createdAt}</TableCell>
                         <TableCell>{apiKey.lastUsed}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => deleteApiKey(apiKey.id)}>
                             <Trash2 />
                           </Button>
                         </TableCell>
