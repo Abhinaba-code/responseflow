@@ -23,8 +23,8 @@ import {
 
 const planCosts: { [key in Plan]: number } = {
     Free: 0,
-    Pro: 4900,
-    Enterprise: 8900,
+    Pro: 59,
+    Enterprise: 99,
 };
 
 const proFeatures = [
