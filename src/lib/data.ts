@@ -381,6 +381,31 @@ export const initialPlaybooks: Playbook[] = [
   },
 ];
 
+export const initialKnowledgeBase = [
+  {
+    category: "Getting Started",
+    articles: [
+      { id: "gs-1", title: "Connecting Your First Channel", content: "To connect a channel, go to Settings > Channels and click 'Add Channel'. Follow the on-screen instructions to authorize ResponseFlow to access your account. You can connect various channels like email, Twitter, Facebook, and more. Once connected, messages from these channels will appear in your unified inbox." },
+      { id: "gs-2", title: "Setting Up Your Profile", content: "You can update your name, profile picture, and notification preferences under Settings > Profile. Make sure to save your changes. Your profile picture will be shown to your team members, but not to customers." },
+      { id: "gs-3", title: "Understanding the Unified Inbox", content: "The Unified Inbox brings all your customer conversations into one place, regardless of the channel they come from. You can filter, sort, and assign conversations to team members directly from the inbox view." },
+    ],
+  },
+  {
+    category: "Billing",
+    articles: [
+      { id: "b-1", title: "How to Upgrade Your Plan", content: "To upgrade your plan, navigate to Settings > Billing and select a new plan that fits your needs. The change will be effective immediately, and your account will be prorated." },
+      { id: "b-2", title: "Understanding Your Invoice", content: "Your invoice includes a breakdown of your subscription cost, any add-ons, and usage-based charges. You can download past invoices from the Settings > Billing page." },
+      { id: "b-3", title: "Accepted Payment Methods", content: "We accept all major credit cards, including Visa, Mastercard, and American Express. We also support payments via PayPal for annual plans." },
+    ],
+  },
+  {
+    category: "Integrations",
+    articles: [
+      { id: "i-1", title: "Connecting to Slack", content: "To receive notifications in Slack, go to Settings > Integrations and authorize your Slack workspace. You can configure which notifications you'd like to receive in specific channels." },
+      { id: "i-2", title: "Using the Zapier Integration", content: "Our Zapier integration allows you to connect ResponseFlow to thousands of other apps. Create zaps to automate workflows between ResponseFlow and services like Google Sheets, Trello, or Salesforce." },
+    ],
+  },
+];
 
 // Type guard for channel
 export function isChannel(value: string): value is Channel {
