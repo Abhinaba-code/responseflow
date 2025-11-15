@@ -13,6 +13,7 @@ import { ChannelIcon } from "@/components/channel-icon";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import type { Channel } from "@/lib/types";
@@ -29,7 +30,13 @@ const initialChannels: ConnectedChannel[] = [
     { name: "Slack", type: "discord", connected: false }
 ];
 
-const roles = [
+type Role = {
+    name: string;
+    description: string;
+    users: number;
+};
+
+const initialRoles: Role[] = [
     { name: "Admin", description: "Full access to all features and settings.", users: 2 },
     { name: "Agent", description: "Can view and respond to tickets.", users: 8 },
     { name: "Viewer", description: "Read-only access to tickets and analytics.", users: 3 }
@@ -39,7 +46,9 @@ const roles = [
 export default function SettingsPage() {
     const { toast } = useToast();
     const [channels, setChannels] = useState<ConnectedChannel[]>(initialChannels);
+    const [roles, setRoles] = useState<Role[]>(initialRoles);
     const [isAddChannelOpen, setIsAddChannelOpen] = useState(false);
+    const [isCreateRoleOpen, setIsCreateRoleOpen] = useState(false);
 
     const handleToggleConnect = (channelName: string) => {
         setChannels(prevChannels =>
@@ -68,6 +77,26 @@ export default function SettingsPage() {
             });
             setIsAddChannelOpen(false);
         }
+    };
+    
+    const handleCreateRole = (name: string, description: string) => {
+        if (name && description) {
+            setRoles(prev => [...prev, { name, description, users: 0 }]);
+            toast({
+                title: "Role Created",
+                description: `The "${name}" role has been successfully created.`,
+            });
+            setIsCreateRoleOpen(false);
+        }
+    };
+    
+    const handleDeleteRole = (roleName: string) => {
+        setRoles(prev => prev.filter(role => role.name !== roleName));
+        toast({
+            title: "Role Deleted",
+            description: `The "${roleName}" role has been deleted.`,
+            variant: "destructive"
+        });
     };
 
 
@@ -117,7 +146,7 @@ export default function SettingsPage() {
                                 Add Channel
                             </Button>
                         </DialogTrigger>
-                        <AddChannelDialog onAddChannel={handleAddChannel} />
+                        <AddChannelDialog onAddChannel={handleAddChannel} onOpenChange={setIsAddChannelOpen} />
                     </Dialog>
                 </div>
                 <div className="space-y-4">
@@ -151,10 +180,15 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex justify-end mb-4">
-                    <Button>
-                        <PlusCircle className="mr-2 h-4 w-4"/>
-                        Create Role
-                    </Button>
+                    <Dialog open={isCreateRoleOpen} onOpenChange={setIsCreateRoleOpen}>
+                        <DialogTrigger asChild>
+                            <Button>
+                                <PlusCircle className="mr-2 h-4 w-4"/>
+                                Create Role
+                            </Button>
+                        </DialogTrigger>
+                        <CreateRoleDialog onCreateRole={handleCreateRole} onOpenChange={setIsCreateRoleOpen} />
+                    </Dialog>
                 </div>
                  <div className="border rounded-lg">
                     <Table>
@@ -175,9 +209,25 @@ export default function SettingsPage() {
                                         <Badge variant="secondary">{role.users}</Badge>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon">
-                                            <Trash2 className="h-4 w-4 text-destructive" />
-                                        </Button>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="ghost" size="icon">
+                                                    <Trash2 className="h-4 w-4 text-destructive" />
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently delete the "{role.name}" role.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDeleteRole(role.name)} className="bg-red-500 hover:bg-red-600">Delete</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -235,7 +285,7 @@ export default function SettingsPage() {
 }
 
 
-function AddChannelDialog({ onAddChannel }: { onAddChannel: (name: string, type: Channel) => void }) {
+function AddChannelDialog({ onAddChannel, onOpenChange }: { onAddChannel: (name: string, type: Channel) => void; onOpenChange: (open: boolean) => void; }) {
     const [name, setName] = useState('');
     const [type, setType] = useState<Channel | ''>('');
 
@@ -277,9 +327,45 @@ function AddChannelDialog({ onAddChannel }: { onAddChannel: (name: string, type:
                 </div>
             </div>
             <DialogFooter>
-                <Button variant="outline" onClick={() => (document.querySelector('[data-radix-collection-item] > [role=dialog] [aria-label=Close]') as HTMLElement)?.click()}>Cancel</Button>
+                <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
                 <Button onClick={handleSubmit}>Add Channel</Button>
             </DialogFooter>
         </DialogContent>
     );
 }
+
+function CreateRoleDialog({ onCreateRole, onOpenChange }: { onCreateRole: (name: string, description: string) => void; onOpenChange: (open: boolean) => void; }) {
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+
+    const handleSubmit = () => {
+        onCreateRole(name, description);
+        setName('');
+        setDescription('');
+    };
+
+    return (
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Create a New Role</DialogTitle>
+                <DialogDescription>Define a new role and its permissions.</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="role-name" className="text-right">Role Name</Label>
+                    <Input id="role-name" value={name} onChange={(e) => setName(e.target.value)} className="col-span-3" placeholder="e.g., Escalation Manager" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="role-description" className="text-right">Description</Label>
+                    <Input id="role-description" value={description} onChange={(e) => setDescription(e.target.value)} className="col-span-3" placeholder="A short description of the role." />
+                </div>
+            </div>
+            <DialogFooter>
+                <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+                <Button onClick={handleSubmit}>Create Role</Button>
+            </DialogFooter>
+        </DialogContent>
+    );
+}
+
+    
