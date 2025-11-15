@@ -3,6 +3,7 @@
 import { generateReplySuggestions } from "@/ai/flows/ai-suggested-replies";
 import { summarizeTicket } from "@/ai/flows/ai-summarize-ticket";
 import { calculatePriorityScore, type CalculatePriorityScoreInput } from "@/ai/flows/ai-priority-score";
+import { chatbot, type ChatbotInput } from "@/ai/flows/ai-chatbot";
 import { z } from "zod";
 
 const SuggestRepliesInput = z.object({
@@ -59,5 +60,31 @@ export async function calculatePriorityScoreAction(input: CalculatePriorityScore
   } catch (error) {
     console.error(error);
     return { success: false, error: "Failed to calculate priority score." };
+  }
+}
+
+
+const ChatbotActionInput = z.object({
+  query: z.string(),
+  history: z.array(
+    z.object({
+      role: z.enum(["user", "model"]),
+      content: z.string(),
+    })
+  ),
+});
+
+
+export async function chatbotAction(input: ChatbotInput) {
+  const parsedInput = ChatbotActionInput.safeParse(input);
+  if (!parsedInput.success) {
+    return { success: false, error: "Invalid input." };
+  }
+  try {
+    const result = await chatbot(input);
+    return { success: true, response: result.response };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Failed to get a response from the chatbot." };
   }
 }
