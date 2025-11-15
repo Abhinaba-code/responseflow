@@ -9,7 +9,7 @@ import Link from "next/link";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuLabel } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Input } from "./ui/input";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { WalletDialog } from "./wallet-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@/context/wallet-context";
@@ -38,6 +38,7 @@ const pageTitles: Record<string, string> = {
 export function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
   const pathname = usePathname();
+  const router = useRouter();
   const title = pageTitles[pathname] || "Dashboard";
   const { toast } = useToast();
   const { balance, setBalance } = useWallet();
@@ -75,6 +76,15 @@ export function DashboardHeader() {
     }
   };
 
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const query = e.currentTarget.value;
+      if (query.trim()) {
+        router.push(`/dashboard/search?q=${encodeURIComponent(query)}`);
+      }
+    }
+  };
+
 
   return (
     <>
@@ -91,7 +101,11 @@ export function DashboardHeader() {
               <div className="w-full max-w-md">
                   <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Search everything..." className="pl-9" />
+                      <Input 
+                        placeholder="Search everything..." 
+                        className="pl-9"
+                        onKeyDown={handleSearch}
+                      />
                   </div>
               </div>
         </div>
@@ -179,5 +193,3 @@ export function DashboardHeader() {
     </>
   );
 }
-
-    
