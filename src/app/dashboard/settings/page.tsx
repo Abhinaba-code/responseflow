@@ -283,4 +283,3 @@ function AddChannelDialog({ onAddChannel }: { onAddChannel: (name: string, type:
         </DialogContent>
     );
 }
-
