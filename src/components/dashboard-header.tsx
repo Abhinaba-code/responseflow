@@ -1,14 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { Bell, LifeBuoy, LogOut, PanelLeft, Search, Settings, User, Wallet, PlusCircle, ArrowDownCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { useSidebar } from "./ui/sidebar";
 import Link from "next/link";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuLabel } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Input } from "./ui/input";
 import { usePathname } from "next/navigation";
-import { MainSidebar } from "./main-sidebar";
+import { WalletDialog } from "./wallet-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const pageTitles: Record<string, string> = {
     '/dashboard': 'Unified Inbox',
@@ -16,6 +18,7 @@ const pageTitles: Record<string, string> = {
     '/dashboard/automations': 'Automations',
     '/dashboard/customers': 'Customers',
     '/dashboard/developer': 'Developer',
+    '/dashboard/developer/api-docs': 'API Documentation',
     '/dashboard/help': 'Help & Support',
     '/dashboard/incidents': 'Incidents',
     '/dashboard/knowledge': 'Knowledge',
@@ -32,91 +35,136 @@ export function DashboardHeader() {
   const { toggleSidebar } = useSidebar();
   const pathname = usePathname();
   const title = pageTitles[pathname] || "Dashboard";
+  const { toast } = useToast();
+
+  const [balance, setBalance] = useState(1250.75);
+  const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
+  const [walletDialogMode, setWalletDialogMode] = useState<"add" | "withdraw">("add");
+
+  const openWalletDialog = (mode: "add" | "withdraw") => {
+    setWalletDialogMode(mode);
+    setIsWalletDialogOpen(true);
+  };
+
+  const handleConfirmTransaction = (amount: number) => {
+    if (walletDialogMode === "add") {
+      setBalance(prev => prev + amount);
+      toast({
+        title: "Money Added",
+        description: `$${amount.toFixed(2)} has been added to your wallet.`,
+      });
+    } else {
+      if (amount > balance) {
+        toast({
+          variant: "destructive",
+          title: "Withdrawal Failed",
+          description: "Insufficient balance.",
+        });
+        return;
+      }
+      setBalance(prev => prev - amount);
+      toast({
+        title: "Money Withdrawn",
+        description: `$${amount.toFixed(2)} has been withdrawn from your wallet.`,
+      });
+    }
+  };
+
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background px-6">
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-            <PanelLeft />
-            <span className="sr-only">Toggle Sidebar</span>
-        </Button>
-        <h1 className="text-xl font-semibold">{title}</h1>
-      </div>
+    <>
+      <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background px-6">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={toggleSidebar} className="md:flex">
+              <PanelLeft />
+              <span className="sr-only">Toggle Sidebar</span>
+          </Button>
+          <h1 className="text-xl font-semibold">{title}</h1>
+        </div>
 
-       <div className="flex-1 flex justify-center px-4">
-            <div className="w-full max-w-md">
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search everything..." className="pl-9" />
-                </div>
-            </div>
-       </div>
+        <div className="flex-1 flex justify-center px-4">
+              <div className="w-full max-w-md">
+                  <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input placeholder="Search everything..." className="pl-9" />
+                  </div>
+              </div>
+        </div>
 
-       <div className="flex items-center gap-2">
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                    <Wallet />
-                    <span className="sr-only">Wallet</span>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuItem>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    <span>Add Money</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <ArrowDownCircle className="mr-2 h-4 w-4" />
-                    <span>Withdraw Money</span>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center gap-2">
+                      <Wallet />
+                      <span>${balance.toFixed(2)}</span>
+                  </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                   <DropdownMenuLabel>Wallet</DropdownMenuLabel>
+                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={() => openWalletDialog("add")}>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      <span>Add Money</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => openWalletDialog("withdraw")}>
+                      <ArrowDownCircle className="mr-2 h-4 w-4" />
+                      <span>Withdraw Money</span>
+                  </DropdownMenuItem>
+              </DropdownMenuContent>
+          </DropdownMenu>
 
-        <Button variant="ghost" size="icon" asChild>
-            <Link href="/dashboard/notifications">
-            <Bell />
-            <span className="sr-only">Notifications</span>
-            </Link>
-        </Button>
+          <Button variant="ghost" size="icon" asChild>
+              <Link href="/dashboard/notifications">
+              <Bell />
+              <span className="sr-only">Notifications</span>
+              </Link>
+          </Button>
 
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Jane Doe" />
-                        <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuItem asChild>
-                    <Link href="/dashboard/settings">
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Edit Profile</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/dashboard/help">
-                        <LifeBuoy className="mr-2 h-4 w-4" />
-                        <span>Help & Support</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/dashboard/settings">
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Settings</span>
-                    </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                    <Link href="/login">
-                        <LogOut className="mr-2 h-4 w-4" />
-                        <span>Log out</span>
-                    </Link>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-       </div>
-    </header>
+          <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                      <Avatar className="h-8 w-8">
+                          <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Jane Doe" />
+                          <AvatarFallback>JD</AvatarFallback>
+                      </Avatar>
+                  </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuItem asChild>
+                      <Link href="/dashboard/settings">
+                          <User className="mr-2 h-4 w-4" />
+                          <span>Edit Profile</span>
+                      </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                      <Link href="/dashboard/help">
+                          <LifeBuoy className="mr-2 h-4 w-4" />
+                          <span>Help & Support</span>
+                      </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                      <Link href="/dashboard/settings">
+                          <Settings className="mr-2 h-4 w-4" />
+                          <span>Settings</span>
+                      </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                      <Link href="/login">
+                          <LogOut className="mr-2 h-4 w-4" />
+                          <span>Log out</span>
+                      </Link>
+                  </DropdownMenuItem>
+              </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
+      <WalletDialog
+        open={isWalletDialogOpen}
+        onOpenChange={setIsWalletDialogOpen}
+        mode={walletDialogMode}
+        onConfirm={handleConfirmTransaction}
+      />
+    </>
   );
 }
