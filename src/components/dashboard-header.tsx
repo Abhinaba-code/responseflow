@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, LifeBuoy, LogOut, PanelLeft, Search, Settings, User } from "lucide-react";
+import { Bell, LifeBuoy, LogOut, PanelLeft, Search, Settings, User, Wallet, PlusCircle, ArrowDownCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { useSidebar } from "./ui/sidebar";
 import Link from "next/link";
@@ -53,6 +53,25 @@ export function DashboardHeader() {
        </div>
 
        <div className="flex items-center gap-2">
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                    <Wallet />
+                    <span className="sr-only">Wallet</span>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuItem>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    <span>Add Money</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <ArrowDownCircle className="mr-2 h-4 w-4" />
+                    <span>Withdraw Money</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+
         <Button variant="ghost" size="icon" asChild>
             <Link href="/dashboard/notifications">
             <Bell />
