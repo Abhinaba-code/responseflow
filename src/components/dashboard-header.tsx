@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -12,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { WalletDialog } from "./wallet-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@/context/wallet-context";
+import { useUser } from "@/context/user-context";
 
 const pageTitles: Record<string, string> = {
     '/dashboard': 'Unified Inbox',
@@ -39,6 +41,7 @@ export function DashboardHeader() {
   const title = pageTitles[pathname] || "Dashboard";
   const { toast } = useToast();
   const { balance, setBalance } = useWallet();
+  const { name } = useUser();
 
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const [walletDialogMode, setWalletDialogMode] = useState<"add" | "withdraw">("add");
@@ -126,8 +129,8 @@ export function DashboardHeader() {
               <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
                       <Avatar className="h-8 w-8">
-                          <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Jane Doe" />
-                          <AvatarFallback>JD</AvatarFallback>
+                          <AvatarImage src={`https://i.pravatar.cc/150?u=${name}`} alt={name} />
+                          <AvatarFallback>{name.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
                       </Avatar>
                   </Button>
               </DropdownMenuTrigger>

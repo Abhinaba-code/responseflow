@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import type { Channel } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/context/user-context";
 
 type ConnectedChannel = {
     name: string;
@@ -63,6 +64,7 @@ export default function SettingsPage() {
     const searchParams = useSearchParams();
     const tab = searchParams.get('tab') || 'channels';
     const { toast } = useToast();
+    const { name, setName } = useUser();
     const [channels, setChannels] = useState<ConnectedChannel[]>(initialChannels);
     const [roles, setRoles] = useState<Role[]>(initialRoles);
     const [isAddChannelOpen, setIsAddChannelOpen] = useState(false);
@@ -70,6 +72,7 @@ export default function SettingsPage() {
     
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [activeTheme, setActiveTheme] = useState(themes[0]);
+    const [currentName, setCurrentName] = useState(name);
 
     useEffect(() => {
         document.documentElement.classList.toggle('dark', isDarkMode);
@@ -89,6 +92,11 @@ export default function SettingsPage() {
         }
 
     }, [activeTheme, isDarkMode]);
+    
+    useEffect(() => {
+        setCurrentName(name);
+    }, [name]);
+
 
     const handleToggleConnect = (channelName: string) => {
         setChannels(prevChannels =>
@@ -146,6 +154,14 @@ export default function SettingsPage() {
         });
     }
 
+    const handleProfileSave = () => {
+        setName(currentName);
+        toast({
+            title: "Profile Updated",
+            description: "Your profile has been successfully updated."
+        });
+    }
+
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-auto p-6">
@@ -166,13 +182,13 @@ export default function SettingsPage() {
               <CardContent className="space-y-4">
                  <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" defaultValue="Jane Doe" />
+                    <Input id="name" value={currentName} onChange={(e) => setCurrentName(e.target.value)} />
                  </div>
                  <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input id="email" type="email" defaultValue="jane.doe@example.com" disabled />
                  </div>
-                 <Button>Save Changes</Button>
+                 <Button onClick={handleProfileSave}>Save Changes</Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -408,5 +424,3 @@ function CreateRoleDialog({ onCreateRole, onOpenChange }: { onCreateRole: (name:
         </DialogContent>
     );
 }
-
-

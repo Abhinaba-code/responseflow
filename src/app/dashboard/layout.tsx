@@ -1,3 +1,4 @@
+
 "use client";
 
 import { DashboardHeader } from "@/components/dashboard-header";
@@ -6,6 +7,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
 import { PlanProvider } from "@/context/plan-context";
 import { WalletProvider } from "@/context/wallet-context";
+import { UserProvider } from "@/context/user-context";
 
 export default function DashboardLayout({
   children,
