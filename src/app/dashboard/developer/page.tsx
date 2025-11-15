@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 type ApiKey = {
   id: string;
@@ -271,13 +272,13 @@ export default function DeveloperPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4 md:grid-cols-2">
-              <a href="#" className="flex items-center gap-4 p-4 border rounded-lg hover:bg-secondary">
+              <Link href="/dashboard/developer/api-docs" className="flex items-center gap-4 p-4 border rounded-lg hover:bg-secondary">
                 <Book className="h-8 w-8 text-primary" />
                 <div>
                   <p className="font-semibold">API Documentation</p>
                   <p className="text-sm text-muted-foreground">Explore all available API endpoints.</p>
                 </div>
-              </a>
+              </Link>
               <a href="#" className="flex items-center gap-4 p-4 border rounded-lg hover:bg-secondary">
                 <Github className="h-8 w-8" />
                 <div>
