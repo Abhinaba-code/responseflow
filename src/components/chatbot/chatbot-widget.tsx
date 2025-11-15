@@ -59,6 +59,11 @@ export function ChatbotWidget() {
       };
 
       recognition.onerror = (event) => {
+        if (event.error === 'no-speech' || event.error === 'aborted') {
+          // Don't show an error for these common cases
+          setIsListening(false);
+          return;
+        }
         console.error("Speech recognition error", event.error);
         toast({
             variant: "destructive",
