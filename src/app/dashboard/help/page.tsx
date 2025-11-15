@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { LifeBuoy, Mail, Phone, User } from "lucide-react";
+import { Mail, User } from "lucide-react";
 import Link from "next/link";
 
 export default function HelpPage() {
@@ -53,10 +53,6 @@ export default function HelpPage() {
                     <Link href="mailto:abhinabapradhan@gmail.com" className="text-primary hover:underline">
                         abhinabapradhan@gmail.com
                     </Link>
-                </div>
-                 <div className="flex items-center gap-4">
-                    <Phone className="h-5 w-5 text-muted-foreground" />
-                    <p>+91 6295869078</p>
                 </div>
             </CardContent>
           </Card>

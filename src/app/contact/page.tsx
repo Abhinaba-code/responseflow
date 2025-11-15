@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Mail, Phone, MapPin, User } from 'lucide-react';
+import { MessageCircle, Mail, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ContactPage() {
@@ -43,10 +43,6 @@ export default function ContactPage() {
                   <div className="flex items-center gap-4">
                     <Mail className="h-5 w-5 text-muted-foreground" />
                     <p>abhinabapradhan@gmail.com</p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Phone className="h-5 w-5 text-muted-foreground" />
-                    <p>+91 6295869078</p>
                   </div>
                   <div className="flex items-center gap-4">
                     <MapPin className="h-5 w-5 text-muted-foreground" />
