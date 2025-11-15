@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -53,6 +53,17 @@ const statusClasses: { [key in Incident["status"]]: string } = {
 };
 
 function IncidentTable({ incidents }: { incidents: Incident[] }) {
+  const [formattedDates, setFormattedDates] = useState<{[key: string]: string}>({});
+
+  useEffect(() => {
+    // Format dates only on the client to avoid hydration mismatch
+    const newFormattedDates: {[key: string]: string} = {};
+    incidents.forEach(incident => {
+      newFormattedDates[incident.id] = format(new Date(incident.createdAt), "PPp");
+    });
+    setFormattedDates(newFormattedDates);
+  }, [incidents]);
+
   return (
     <div className="border rounded-lg">
       <Table>
@@ -80,7 +91,7 @@ function IncidentTable({ incidents }: { incidents: Incident[] }) {
                   {incident.status}
                 </Badge>
               </TableCell>
-              <TableCell>{format(new Date(incident.createdAt), "PPp")}</TableCell>
+              <TableCell>{formattedDates[incident.id] || "..."}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -218,5 +229,3 @@ export default function IncidentsPage() {
     </div>
   );
 }
-
-    
