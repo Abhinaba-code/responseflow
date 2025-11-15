@@ -279,7 +279,7 @@ export default function DeveloperPage() {
                   <p className="text-sm text-muted-foreground">Explore all available API endpoints.</p>
                 </div>
               </Link>
-              <a href="#" className="flex items-center gap-4 p-4 border rounded-lg hover:bg-secondary">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 border rounded-lg hover:bg-secondary">
                 <Github className="h-8 w-8" />
                 <div>
                   <p className="font-semibold">Visit our GitHub</p>
