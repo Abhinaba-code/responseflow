@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -49,6 +50,11 @@ const themes = [
   { name: 'Rose', colors: { primary: '346.8 77.2% 49.8%', accent: '346.8 77.2% 59.8%', background: '346.8 77.2% 97%', card: '0 0% 100%' } },
   { name: 'Green', colors: { primary: '142.1 76.2% 36.3%', accent: '142.1 76.2% 46.3%', background: '142.1 76.2% 96%', card: '0 0% 100%' } },
   { name: 'Blue', colors: { primary: '217.2 91.2% 59.8%', accent: '217.2 91.2% 69.8%', background: '217.2 91.2% 97%', card: '0 0% 100%' } },
+  { name: 'Violet', colors: { primary: '262.1 83.3% 57.8%', accent: '262.1 83.3% 67.8%', background: '262.1 83.3% 97%', card: '0 0% 100%' } },
+  { name: 'Orange', colors: { primary: '24.6 95% 53.1%', accent: '24.6 95% 63.1%', background: '24.6 95% 97%', card: '0 0% 100%' } },
+  { name: 'Slate', colors: { primary: '215.4 16.3% 46.9%', accent: '215.4 16.3% 56.9%', background: '215.4 16.3% 96%', card: '0 0% 100%' } },
+  { name: 'Cyan', colors: { primary: '190 95% 43%', accent: '190 95% 53%', background: '190 95% 97%', card: '0 0% 100%' } },
+  { name: 'Zinc', colors: { primary: '221.2 83.2% 53.3%', accent: '221.2 83.2% 63.3%', background: '221.2 83.2% 97%', card: '0 0% 100%' } },
 ];
 
 
@@ -399,3 +405,4 @@ function CreateRoleDialog({ onCreateRole, onOpenChange }: { onCreateRole: (name:
         </DialogContent>
     );
 }
+
