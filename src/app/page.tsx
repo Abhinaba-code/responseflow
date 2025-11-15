@@ -41,7 +41,7 @@ export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background animate-fade-in-up">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl">
           <MessageCircle className="h-7 w-7 text-primary" />
