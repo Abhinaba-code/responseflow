@@ -132,7 +132,7 @@ export function DashboardHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuItem asChild>
-                      <Link href="/dashboard/settings">
+                      <Link href="/dashboard/settings?tab=profile">
                           <User className="mr-2 h-4 w-4" />
                           <span>Edit Profile</span>
                       </Link>

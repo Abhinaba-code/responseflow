@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -59,6 +60,8 @@ const themes = [
 
 
 export default function SettingsPage() {
+    const searchParams = useSearchParams();
+    const tab = searchParams.get('tab') || 'channels';
     const { toast } = useToast();
     const [channels, setChannels] = useState<ConnectedChannel[]>(initialChannels);
     const [roles, setRoles] = useState<Role[]>(initialRoles);
@@ -146,7 +149,7 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-auto p-6">
-        <Tabs defaultValue="channels">
+        <Tabs defaultValue={tab} className="h-full">
           <TabsList className="grid w-full grid-cols-4 max-w-lg">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="channels">Channels</TabsTrigger>
@@ -405,4 +408,5 @@ function CreateRoleDialog({ onCreateRole, onOpenChange }: { onCreateRole: (name:
         </DialogContent>
     );
 }
+
 
