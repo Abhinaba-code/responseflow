@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
@@ -8,6 +9,17 @@ import { usePlan, type Plan } from "@/context/plan-context";
 import { useWallet } from "@/context/wallet-context";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 
 const planCosts: { [key in Plan]: number } = {
     Free: 0,
@@ -34,9 +46,19 @@ export default function BillingPage() {
     const { plan, setPlan } = usePlan();
     const { balance, setBalance } = useWallet();
     const { toast } = useToast();
+    const [isConfirmingUpgrade, setIsConfirmingUpgrade] = useState(false);
+    const [planToUpgrade, setPlanToUpgrade] = useState<Plan | null>(null);
 
-    const handleUpgrade = (newPlan: Plan) => {
-        const cost = planCosts[newPlan];
+
+    const handleUpgradeClick = (newPlan: Plan) => {
+        setPlanToUpgrade(newPlan);
+        setIsConfirmingUpgrade(true);
+    };
+
+    const executeUpgrade = () => {
+        if (!planToUpgrade) return;
+
+        const cost = planCosts[planToUpgrade];
         if (balance < cost) {
             toast({
                 variant: "destructive",
@@ -47,11 +69,14 @@ export default function BillingPage() {
         }
 
         setBalance(prev => prev - cost);
-        setPlan(newPlan);
+        setPlan(planToUpgrade);
         toast({
             title: "Upgrade Successful!",
-            description: `You are now on the ${newPlan} plan. $${cost} has been deducted from your wallet.`,
+            description: `You are now on the ${planToUpgrade} plan. $${cost.toFixed(2)} has been deducted from your wallet.`,
         });
+        
+        setIsConfirmingUpgrade(false);
+        setPlanToUpgrade(null);
     };
     
     const handleDowngrade = () => {
@@ -62,11 +87,12 @@ export default function BillingPage() {
         setPlan("Free");
         toast({
             title: "Downgrade Successful",
-            description: `You are now on the Free plan. $${refundAmount} has been refunded to your wallet.`,
+            description: `You are now on the Free plan. $${refundAmount.toFixed(2)} has been refunded to your wallet.`,
         });
     };
 
   return (
+    <>
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-auto p-6">
         <div className="max-w-4xl mx-auto">
@@ -95,7 +121,7 @@ export default function BillingPage() {
                                 ))}
                             </ul>
                         </div>
-                        <Button className="w-full" disabled={plan === "Pro" || plan === "Enterprise"} onClick={() => handleUpgrade("Pro")}>
+                        <Button className="w-full" disabled={plan === "Pro" || plan === "Enterprise"} onClick={() => handleUpgradeClick("Pro")}>
                             {plan === "Enterprise" ? "Included in Enterprise" : plan === "Pro" ? "Current Plan" : "Upgrade to Pro"}
                         </Button>
                     </CardContent>
@@ -120,7 +146,7 @@ export default function BillingPage() {
                                 ))}
                             </ul>
                         </div>
-                         <Button className="w-full" disabled={plan === "Enterprise"} onClick={() => handleUpgrade("Enterprise")}>
+                         <Button className="w-full" disabled={plan === "Enterprise"} onClick={() => handleUpgradeClick("Enterprise")}>
                             {plan === "Enterprise" ? "Current Plan" : "Upgrade to Enterprise"}
                         </Button>
                     </CardContent>
@@ -134,5 +160,22 @@ export default function BillingPage() {
         </div>
       </div>
     </div>
+    <AlertDialog open={isConfirmingUpgrade} onOpenChange={setIsConfirmingUpgrade}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Subscription Upgrade</AlertDialogTitle>
+                <AlertDialogDescription>
+                    You are about to upgrade to the <strong>{planToUpgrade}</strong> plan. 
+                    This will deduct <strong>${planToUpgrade ? planCosts[planToUpgrade].toFixed(2) : '0.00'}</strong> from your wallet. 
+                    Do you wish to continue?
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setPlanToUpgrade(null)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={executeUpgrade}>Confirm Upgrade</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }
