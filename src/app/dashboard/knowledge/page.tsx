@@ -6,33 +6,34 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { FileText, PlusCircle, Search } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const initialKnowledgeBase = [
   {
     category: "Getting Started",
     articles: [
-      { id: "gs-1", title: "Connecting Your First Channel", content: "To connect a channel, go to Settings > Channels and click 'Add Channel'..." },
-      { id: "gs-2", title: "Setting Up Your Profile", content: "You can update your name and profile picture under Settings > Profile..." },
-      { id: "gs-3", title: "Understanding the Unified Inbox", content: "The Unified Inbox brings all your customer conversations into one place..." },
+      { id: "gs-1", title: "Connecting Your First Channel", content: "To connect a channel, go to Settings > Channels and click 'Add Channel'. Follow the on-screen instructions to authorize ResponseFlow to access your account. You can connect various channels like email, Twitter, Facebook, and more. Once connected, messages from these channels will appear in your unified inbox." },
+      { id: "gs-2", title: "Setting Up Your Profile", content: "You can update your name, profile picture, and notification preferences under Settings > Profile. Make sure to save your changes. Your profile picture will be shown to your team members, but not to customers." },
+      { id: "gs-3", title: "Understanding the Unified Inbox", content: "The Unified Inbox brings all your customer conversations into one place, regardless of the channel they come from. You can filter, sort, and assign conversations to team members directly from the inbox view." },
     ],
   },
   {
     category: "Billing",
     articles: [
-      { id: "b-1", title: "How to Upgrade Your Plan", content: "To upgrade your plan, navigate to Settings > Billing and select a new plan..." },
-      { id: "b-2", title: "Understanding Your Invoice", content: "Your invoice includes a breakdown of your subscription and any add-ons..." },
-      { id: "b-3", title: "Accepted Payment Methods", content: "We accept all major credit cards, including Visa, Mastercard, and American Express..." },
+      { id: "b-1", title: "How to Upgrade Your Plan", content: "To upgrade your plan, navigate to Settings > Billing and select a new plan that fits your needs. The change will be effective immediately, and your account will be prorated." },
+      { id: "b-2", title: "Understanding Your Invoice", content: "Your invoice includes a breakdown of your subscription cost, any add-ons, and usage-based charges. You can download past invoices from the Settings > Billing page." },
+      { id: "b-3", title: "Accepted Payment Methods", content: "We accept all major credit cards, including Visa, Mastercard, and American Express. We also support payments via PayPal for annual plans." },
     ],
   },
   {
     category: "Integrations",
     articles: [
-      { id: "i-1", title: "Connecting to Slack", content: "To receive notifications in Slack, go to Settings > Integrations and authorize your Slack workspace..." },
-      { id: "i-2", title: "Using the Zapier Integration", content: "Our Zapier integration allows you to connect ResponseFlow to thousands of other apps..." },
+      { id: "i-1", title: "Connecting to Slack", content: "To receive notifications in Slack, go to Settings > Integrations and authorize your Slack workspace. You can configure which notifications you'd like to receive in specific channels." },
+      { id: "i-2", title: "Using the Zapier Integration", content: "Our Zapier integration allows you to connect ResponseFlow to thousands of other apps. Create zaps to automate workflows between ResponseFlow and services like Google Sheets, Trello, or Salesforce." },
     ],
   },
 ];
@@ -43,6 +44,8 @@ type KnowledgeCategory = { category: string; articles: Article[] };
 export default function KnowledgePage() {
   const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeCategory[]>(initialKnowledgeBase);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
   const handleAddArticle = (newArticle: Omit<Article, 'id'> & { category: string }) => {
     setKnowledgeBase(prev => {
@@ -64,6 +67,11 @@ export default function KnowledgePage() {
       }
     });
     setIsFormOpen(false);
+  };
+  
+  const handleViewArticle = (article: Article) => {
+    setSelectedArticle(article);
+    setIsViewOpen(true);
   };
 
   return (
@@ -101,7 +109,7 @@ export default function KnowledgePage() {
                             <p className="font-medium">{article.title}</p>
                             <p className="text-sm text-muted-foreground truncate">{article.content}</p>
                           </div>
-                          <Button variant="ghost" size="sm">View</Button>
+                          <Button variant="ghost" size="sm" onClick={() => handleViewArticle(article)}>View</Button>
                         </div>
                       ))}
                     </div>
@@ -118,6 +126,12 @@ export default function KnowledgePage() {
         onOpenChange={setIsFormOpen}
         onSave={handleAddArticle}
         categories={knowledgeBase.map(c => c.category)}
+      />
+
+      <ArticleViewDialog
+        open={isViewOpen}
+        onOpenChange={setIsViewOpen}
+        article={selectedArticle}
       />
     </div>
   );
@@ -191,4 +205,37 @@ function ArticleFormDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+function ArticleViewDialog({
+  open,
+  onOpenChange,
+  article
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  article: Article | null;
+}) {
+  if (!article) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>{article.title}</DialogTitle>
+          <DialogDescription>
+            Full article content below.
+          </DialogDescription>
+        </DialogHeader>
+        <ScrollArea className="h-[400px] mt-4 pr-4">
+            <div className="text-sm whitespace-pre-wrap">
+                {article.content}
+            </div>
+        </ScrollArea>
+        <DialogFooter>
+          <Button onClick={() => onOpenChange(false)}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 }
