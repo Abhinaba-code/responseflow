@@ -10,7 +10,7 @@ type WalletContextType = {
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: React.ReactNode }) {
-  const [balance, setBalance] = useState<number>(1250.75);
+  const [balance, setBalance] = useState<number>(100);
 
   const value = useMemo(() => ({ balance, setBalance }), [balance]);
 
