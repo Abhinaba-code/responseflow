@@ -53,6 +53,18 @@ export default function BillingPage() {
             description: `You are now on the ${newPlan} plan. $${cost} has been deducted from your wallet.`,
         });
     };
+    
+    const handleDowngrade = () => {
+        if (plan === "Free") return;
+
+        const refundAmount = planCosts[plan];
+        setBalance(prev => prev + refundAmount);
+        setPlan("Free");
+        toast({
+            title: "Downgrade Successful",
+            description: `You are now on the Free plan. $${refundAmount} has been refunded to your wallet.`,
+        });
+    };
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -115,7 +127,7 @@ export default function BillingPage() {
                 </Card>
             </div>
              <div className="text-center mt-8">
-                <Button variant="link" onClick={() => setPlan("Free")} disabled={plan === "Free"}>
+                <Button variant="link" onClick={handleDowngrade} disabled={plan === "Free"}>
                     Downgrade to Free
                 </Button>
             </div>
