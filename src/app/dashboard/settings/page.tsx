@@ -5,6 +5,23 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { PlusCircle, Trash2 } from "lucide-react";
+import { ChannelIcon } from "@/components/channel-icon";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+
+const connectedChannels = [
+    { name: "Support Email", type: "email", connected: true },
+    { name: "Twitter DMs", type: "twitter", connected: true },
+    { name: "Slack", type: "discord", connected: false }
+];
+
+const roles = [
+    { name: "Admin", description: "Full access to all features and settings.", users: 2 },
+    { name: "Agent", description: "Can view and respond to tickets.", users: 8 },
+    { name: "Viewer", description: "Read-only access to tickets and analytics.", users: 3 }
+];
+
 
 export default function SettingsPage() {
   return (
@@ -45,7 +62,28 @@ export default function SettingsPage() {
                 <CardDescription>Connect and manage your support channels.</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Channel management will be built here.</p>
+                <div className="flex justify-end mb-4">
+                    <Button>
+                        <PlusCircle className="mr-2 h-4 w-4"/>
+                        Add Channel
+                    </Button>
+                </div>
+                <div className="space-y-4">
+                    {connectedChannels.map(channel => (
+                        <div key={channel.name} className="flex items-center justify-between rounded-lg border p-4">
+                            <div className="flex items-center gap-3">
+                                <ChannelIcon channel={channel.type as any} className="h-6 w-6" />
+                                <div>
+                                    <p className="font-medium">{channel.name}</p>
+                                    <p className="text-sm text-muted-foreground">{channel.type.charAt(0).toUpperCase() + channel.type.slice(1)}</p>
+                                </div>
+                            </div>
+                            <Button variant={channel.connected ? "secondary" : "default"}>
+                                {channel.connected ? "Manage" : "Connect"}
+                            </Button>
+                        </div>
+                    ))}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -57,7 +95,40 @@ export default function SettingsPage() {
                 <CardDescription>Define roles and permissions for your team members.</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Role management will be built here.</p>
+                <div className="flex justify-end mb-4">
+                    <Button>
+                        <PlusCircle className="mr-2 h-4 w-4"/>
+                        Create Role
+                    </Button>
+                </div>
+                 <div className="border rounded-lg">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Role</TableHead>
+                                <TableHead>Description</TableHead>
+                                <TableHead className="text-center">Users</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {roles.map(role => (
+                                <TableRow key={role.name}>
+                                    <TableCell className="font-medium">{role.name}</TableCell>
+                                    <TableCell className="text-muted-foreground">{role.description}</TableCell>
+                                    <TableCell className="text-center">
+                                        <Badge variant="secondary">{role.users}</Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon">
+                                            <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                 </div>
               </CardContent>
             </Card>
           </TabsContent>
