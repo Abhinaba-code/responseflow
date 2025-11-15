@@ -1,22 +1,23 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Check } from "lucide-react";
 import { ChannelIcon } from "@/components/channel-icon";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import type { Channel } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 type ConnectedChannel = {
     name: string;
@@ -42,6 +43,14 @@ const initialRoles: Role[] = [
     { name: "Viewer", description: "Read-only access to tickets and analytics.", users: 3 }
 ];
 
+const themes = [
+  { name: 'Default', colors: { primary: '243 75% 59%', accent: '188 95% 43%', background: '210 40% 98%', card: '0 0% 100%' } },
+  { name: 'Stone', colors: { primary: '24 9.8% 10%', accent: '24 9.8% 20%', background: '24 9.8% 95%', card: '24 9.8% 100%' } },
+  { name: 'Rose', colors: { primary: '346.8 77.2% 49.8%', accent: '346.8 77.2% 59.8%', background: '346.8 77.2% 97%', card: '0 0% 100%' } },
+  { name: 'Green', colors: { primary: '142.1 76.2% 36.3%', accent: '142.1 76.2% 46.3%', background: '142.1 76.2% 96%', card: '0 0% 100%' } },
+  { name: 'Blue', colors: { primary: '217.2 91.2% 59.8%', accent: '217.2 91.2% 69.8%', background: '217.2 91.2% 97%', card: '0 0% 100%' } },
+];
+
 
 export default function SettingsPage() {
     const { toast } = useToast();
@@ -49,6 +58,28 @@ export default function SettingsPage() {
     const [roles, setRoles] = useState<Role[]>(initialRoles);
     const [isAddChannelOpen, setIsAddChannelOpen] = useState(false);
     const [isCreateRoleOpen, setIsCreateRoleOpen] = useState(false);
+    
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [activeTheme, setActiveTheme] = useState(themes[0]);
+
+    useEffect(() => {
+        document.documentElement.classList.toggle('dark', isDarkMode);
+    }, [isDarkMode]);
+    
+    useEffect(() => {
+        const root = document.documentElement;
+        root.style.setProperty('--primary', activeTheme.colors.primary);
+        root.style.setProperty('--accent', activeTheme.colors.accent);
+
+        if (isDarkMode) {
+            root.style.setProperty('--background', '220 39% 7%');
+            root.style.setProperty('--card', '222 47% 11%');
+        } else {
+             root.style.setProperty('--background', activeTheme.colors.background);
+             root.style.setProperty('--card', activeTheme.colors.card);
+        }
+
+    }, [activeTheme, isDarkMode]);
 
     const handleToggleConnect = (channelName: string) => {
         setChannels(prevChannels =>
@@ -99,6 +130,12 @@ export default function SettingsPage() {
         });
     };
 
+    const handleSaveTheme = () => {
+        toast({
+            title: "Theme Saved",
+            description: "Your new theme has been applied."
+        });
+    }
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -211,7 +248,7 @@ export default function SettingsPage() {
                                     <TableCell className="text-right">
                                         <AlertDialog>
                                             <AlertDialogTrigger asChild>
-                                                <Button variant="ghost" size="icon">
+                                                <Button variant="ghost" size="icon" disabled={role.users > 0}>
                                                     <Trash2 className="h-4 w-4 text-destructive" />
                                                 </Button>
                                             </AlertDialogTrigger>
@@ -250,31 +287,26 @@ export default function SettingsPage() {
                     <Label htmlFor="dark-mode">Dark Mode</Label>
                     <p className="text-sm text-muted-foreground">Enable to switch to a darker theme.</p>
                   </div>
-                  <Switch id="dark-mode" />
+                  <Switch id="dark-mode" checked={isDarkMode} onCheckedChange={setIsDarkMode} />
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-2">
                     <Label>Color Palette</Label>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="space-y-1">
-                            <Label className="text-xs text-muted-foreground">Primary</Label>
-                            <div className="h-10 w-full rounded-md border bg-primary flex items-center justify-center text-primary-foreground font-mono text-sm">#4F46E5</div>
-                        </div>
-                         <div className="space-y-1">
-                            <Label className="text-xs text-muted-foreground">Accent</Label>
-                            <div className="h-10 w-full rounded-md border bg-accent flex items-center justify-center text-accent-foreground font-mono text-sm">#06B6D4</div>
-                        </div>
-                         <div className="space-y-1">
-                            <Label className="text-xs text-muted-foreground">Background</Label>
-                            <div className="h-10 w-full rounded-md border bg-background flex items-center justify-center text-foreground font-mono text-sm">#F8FAFC</div>
-                        </div>
-                         <div className="space-y-1">
-                            <Label className="text-xs text-muted-foreground">Card / Surface</Label>
-                            <div className="h-10 w-full rounded-md border bg-card flex items-center justify-center text-card-foreground font-mono text-sm">#FFFFFF</div>
-                        </div>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        {themes.map((theme) => (
+                           <button key={theme.name} onClick={() => setActiveTheme(theme)} className="flex flex-col items-center gap-2">
+                               <div className={cn("h-16 w-full rounded-md border-2", activeTheme.name === theme.name ? "border-primary" : "border-transparent")}>
+                                   <div className="h-full w-full rounded-sm bg-background p-2 flex gap-1">
+                                       <div className="h-full w-4 rounded-sm" style={{ backgroundColor: `hsl(${theme.colors.primary})` }} />
+                                       <div className="h-full w-4 rounded-sm" style={{ backgroundColor: `hsl(${theme.colors.accent})` }} />
+                                   </div>
+                               </div>
+                               <p className="text-sm">{theme.name}</p>
+                           </button>
+                        ))}
                     </div>
                 </div>
-                <Button>Save Theme</Button>
+                <Button onClick={handleSaveTheme}>Save Theme</Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -367,5 +399,3 @@ function CreateRoleDialog({ onCreateRole, onOpenChange }: { onCreateRole: (name:
         </DialogContent>
     );
 }
-
-    
