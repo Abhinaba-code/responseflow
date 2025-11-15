@@ -8,6 +8,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarSeparator,
+  SidebarContent,
 } from "@/components/ui/sidebar";
 import { MessageCircle, LayoutGrid, BarChart3, SlidersHorizontal, Users, Settings, LifeBuoy, ShieldAlert, BookOpen, Bot, PieChart, CheckCircle, Search, Code, User, LogOut, Lock, Crown } from "lucide-react";
 import Link from "next/link";
@@ -56,34 +57,36 @@ export function MainSidebar() {
         </div>
       </SidebarHeader>
       
-      <SidebarMenu className="flex-1">
-        {menuItems.map((group) => (
-          <SidebarGroup key={group.group}>
-             <SidebarGroupLabel>{group.group}</SidebarGroupLabel>
-             <SidebarMenu>
-                {group.items.map((item) => (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === item.href}
-                      tooltip={{ children: item.label }}
-                      className="flex justify-between"
-                    >
-                      <Link href={item.href}>
-                        <div className="flex items-center gap-2">
-                            <item.icon />
-                            <span>{item.label}</span>
-                        </div>
-                        {item.plan === "pro" && <Lock className="h-3 w-3 text-yellow-500" />}
-                        {item.plan === "enterprise" && <Crown className="h-3 w-3 text-purple-500" />}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-             </SidebarMenu>
-          </SidebarGroup>
-        ))}
-      </SidebarMenu>
+      <SidebarContent>
+        <SidebarMenu>
+          {menuItems.map((group) => (
+            <SidebarGroup key={group.group}>
+               <SidebarGroupLabel>{group.group}</SidebarGroupLabel>
+               <SidebarMenu>
+                  {group.items.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={pathname === item.href}
+                        tooltip={{ children: item.label }}
+                        className="flex justify-between"
+                      >
+                        <Link href={item.href}>
+                          <div className="flex items-center gap-2">
+                              <item.icon />
+                              <span>{item.label}</span>
+                          </div>
+                          {item.plan === "pro" && <Lock className="h-3 w-3 text-yellow-500" />}
+                          {item.plan === "enterprise" && <Crown className="h-3 w-3 text-purple-500" />}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+               </SidebarMenu>
+            </SidebarGroup>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
     </Sidebar>
   );
 }
