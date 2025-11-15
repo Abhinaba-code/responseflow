@@ -19,8 +19,8 @@ export default function Home() {
             <Link href="/login">Sign In</Link>
           </Button>
           <Button asChild>
-            <Link href="/login">
-              Get Started <ArrowRight className="ml-2" />
+            <Link href="/signup">
+              Sign Up <ArrowRight className="ml-2" />
             </Link>
           </Button>
         </nav>
@@ -40,7 +40,7 @@ export default function Home() {
           </p>
           <div className="flex justify-center gap-4">
             <Button size="lg" asChild>
-              <Link href="/login">Get Started for Free</Link>
+              <Link href="/signup">Sign Up for Free</Link>
             </Button>
             <Button size="lg" variant="outline">
               Book a Demo
