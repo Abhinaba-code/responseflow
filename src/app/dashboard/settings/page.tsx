@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -33,6 +34,30 @@ export default function SettingsPage() {
                     <Input id="email" type="email" defaultValue="jane.doe@example.com" disabled />
                  </div>
                  <Button>Save Changes</Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="channels" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Channels</CardTitle>
+                <CardDescription>Connect and manage your support channels.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">Channel management will be built here.</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="roles" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Roles & Permissions</CardTitle>
+                <CardDescription>Define roles and permissions for your team members.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">Role management will be built here.</p>
               </CardContent>
             </Card>
           </TabsContent>
