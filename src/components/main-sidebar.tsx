@@ -27,21 +27,21 @@ export function MainSidebar() {
         { href: "/dashboard/incidents", icon: ShieldAlert, label: "Incidents", plan: "free" },
         { href: "/dashboard/customers", icon: Users, label: "Customers", plan: "free" },
         { href: "/dashboard/knowledge", icon: BookOpen, label: "Knowledge", plan: "free" },
-        { href: "/dashboard/search", icon: Search, label: "Search", plan: "pro" },
-        { href: "/dashboard/developer", icon: Code, label: "Developer", plan: "pro" },
+        { href: "/dashboard/search", icon: Search, label: "Search", plan: "free" },
+        { href: "/dashboard/developer", icon: Code, label: "Developer", plan: "free" },
       ],
     },
     {
       group: "AI",
       items: [
-        { href: "/dashboard/playbooks", icon: Bot, label: "Playbooks", plan: "pro" },
+        { href: "/dashboard/playbooks", icon: Bot, label: "Playbooks", plan: "free" },
         { href: "/dashboard/automations", icon: SlidersHorizontal, label: "Automations", plan: "enterprise" },
       ],
     },
     {
         group: "Reporting",
         items: [
-            { href: "/dashboard/analytics", icon: BarChart3, label: "Analytics", plan: "pro" },
+            { href: "/dashboard/analytics", icon: BarChart3, label: "Analytics", plan: "free" },
             { href: "/dashboard/teams", icon: PieChart, label: "Workload", plan: "enterprise" },
             { href: "/dashboard/quality", icon: CheckCircle, label: "Quality", plan: "enterprise" },
         ]
