@@ -46,6 +46,12 @@ export default function PricingPage() {
         </Link>
         <nav className="hidden md:flex items-center gap-4">
           <Button variant="ghost" asChild>
+              <Link href="/about">About</Link>
+          </Button>
+          <Button variant="ghost" asChild>
+              <Link href="/contact">Contact</Link>
+          </Button>
+          <Button variant="ghost" asChild>
               <Link href="/pricing">Pricing</Link>
           </Button>
           <Button variant="ghost" asChild>
@@ -66,6 +72,8 @@ export default function PricingPage() {
             </SheetTrigger>
             <SheetContent side="right">
               <nav className="flex flex-col gap-4 mt-8">
+                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">About</Link>
+                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Contact</Link>
                 <Link href="/pricing" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Pricing</Link>
                 <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Sign In</Link>
                 <Button asChild>
