@@ -1,10 +1,32 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, Mail, MessageCircle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowRight, Mail, MessageCircle, Check } from 'lucide-react';
 import Link from 'next/link';
 import { ChannelIcon } from '@/components/channel-icon';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+
+const planCosts = {
+    Pro: 59,
+    Enterprise: 99,
+};
+
+const proFeatures = [
+    "Search",
+    "Developer API",
+    "Playbooks (AI)",
+    "Analytics"
+];
+
+const enterpriseFeatures = [
+    "All Pro features",
+    "Automations (AI)",
+    "Workload Reporting",
+    "Quality Audits",
+    "Dedicated Support"
+];
+
 
 export default function Home() {
   return (
@@ -15,6 +37,9 @@ export default function Home() {
           <span className="font-headline">ResponseFlow</span>
         </Link>
         <nav className="flex items-center gap-4">
+          <Button variant="ghost" asChild>
+              <Link href="/pricing">Pricing</Link>
+          </Button>
           <Button variant="ghost" asChild>
             <Link href="/login">Sign In</Link>
           </Button>
@@ -120,6 +145,64 @@ export default function Home() {
             </CardContent>
           </Card>
         </section>
+        
+        <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+             <div className="text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-headline font-bold tracking-tight">Simple, transparent pricing</h2>
+                <p className="mt-2 text-lg text-muted-foreground">Choose the plan that's right for your team.</p>
+            </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-4xl mx-auto">
+                <Card className="border-2 relative">
+                    <CardHeader>
+                        <CardTitle className="text-2xl">Pro</CardTitle>
+                        <CardDescription>For growing teams that need powerful tools and AI capabilities.</CardDescription>
+                        <div className="text-4xl font-bold pt-4">₹{planCosts.Pro} <span className="text-base font-normal text-muted-foreground">/ month</span></div>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div>
+                            <h4 className="font-semibold mb-3">Key Features:</h4>
+                            <ul className="space-y-2">
+                                {proFeatures.map(feature => (
+                                    <li key={feature} className="flex items-center gap-2">
+                                        <Check className="h-4 w-4 text-green-500" />
+                                        <span className="text-sm">{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                         <Button className="w-full" asChild>
+                          <Link href="/signup">Get Started with Pro</Link>
+                        </Button>
+                    </CardContent>
+                </Card>
+
+                 <Card className="border-2 border-primary relative">
+                    <Badge className="absolute -top-3 right-4">Most Popular</Badge>
+                    <CardHeader>
+                        <CardTitle className="text-2xl">Enterprise</CardTitle>
+                        <CardDescription>For large organizations requiring advanced automation and reporting.</CardDescription>
+                         <div className="text-4xl font-bold pt-4">₹{planCosts.Enterprise} <span className="text-base font-normal text-muted-foreground">/ month</span></div>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div>
+                            <h4 className="font-semibold mb-3">Everything in Pro, plus:</h4>
+                            <ul className="space-y-2">
+                                {enterpriseFeatures.map(feature => (
+                                    <li key={feature} className="flex items-center gap-2">
+                                        <Check className="h-4 w-4 text-green-500" />
+                                        <span className="text-sm">{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                         <Button className="w-full" asChild>
+                          <Link href="/signup">Get Started with Enterprise</Link>
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
+        </section>
+
       </main>
     </div>
   );
