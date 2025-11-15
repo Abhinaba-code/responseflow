@@ -4,8 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { usePlan } from "@/context/plan-context";
+import { usePlan, type Plan } from "@/context/plan-context";
+import { useWallet } from "@/context/wallet-context";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+
+const planCosts: { [key in Plan]: number } = {
+    Free: 0,
+    Pro: 59,
+    Enterprise: 99,
+};
 
 const proFeatures = [
     "Search",
@@ -24,6 +32,27 @@ const enterpriseFeatures = [
 
 export default function BillingPage() {
     const { plan, setPlan } = usePlan();
+    const { balance, setBalance } = useWallet();
+    const { toast } = useToast();
+
+    const handleUpgrade = (newPlan: Plan) => {
+        const cost = planCosts[newPlan];
+        if (balance < cost) {
+            toast({
+                variant: "destructive",
+                title: "Upgrade Failed",
+                description: "Insufficient wallet balance. Please add funds to your wallet.",
+            });
+            return;
+        }
+
+        setBalance(prev => prev - cost);
+        setPlan(newPlan);
+        toast({
+            title: "Upgrade Successful!",
+            description: `You are now on the ${newPlan} plan. $${cost} has been deducted from your wallet.`,
+        });
+    };
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -40,7 +69,7 @@ export default function BillingPage() {
                     <CardHeader>
                         <CardTitle className="text-2xl">Pro</CardTitle>
                         <CardDescription>For growing teams that need powerful tools and AI capabilities.</CardDescription>
-                        <div className="text-4xl font-bold pt-4">$59 <span className="text-base font-normal text-muted-foreground">/ month</span></div>
+                        <div className="text-4xl font-bold pt-4">${planCosts.Pro} <span className="text-base font-normal text-muted-foreground">/ month</span></div>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div>
@@ -54,7 +83,7 @@ export default function BillingPage() {
                                 ))}
                             </ul>
                         </div>
-                        <Button className="w-full" disabled={plan === "Pro"} onClick={() => setPlan("Pro")}>
+                        <Button className="w-full" disabled={plan === "Pro"} onClick={() => handleUpgrade("Pro")}>
                             {plan === "Pro" ? "Current Plan" : "Upgrade to Pro"}
                         </Button>
                     </CardContent>
@@ -65,7 +94,7 @@ export default function BillingPage() {
                     <CardHeader>
                         <CardTitle className="text-2xl">Enterprise</CardTitle>
                         <CardDescription>For large organizations requiring advanced automation and reporting.</CardDescription>
-                         <div className="text-4xl font-bold pt-4">$99 <span className="text-base font-normal text-muted-foreground">/ month</span></div>
+                         <div className="text-4xl font-bold pt-4">${planCosts.Enterprise} <span className="text-base font-normal text-muted-foreground">/ month</span></div>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div>
@@ -79,7 +108,7 @@ export default function BillingPage() {
                                 ))}
                             </ul>
                         </div>
-                         <Button className="w-full" disabled={plan === "Enterprise"} onClick={() => setPlan("Enterprise")}>
+                         <Button className="w-full" disabled={plan === "Enterprise"} onClick={() => handleUpgrade("Enterprise")}>
                             {plan === "Enterprise" ? "Current Plan" : "Upgrade to Enterprise"}
                         </Button>
                     </CardContent>

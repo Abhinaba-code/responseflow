@@ -11,6 +11,7 @@ import { Input } from "./ui/input";
 import { usePathname } from "next/navigation";
 import { WalletDialog } from "./wallet-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useWallet } from "@/context/wallet-context";
 
 const pageTitles: Record<string, string> = {
     '/dashboard': 'Unified Inbox',
@@ -37,8 +38,8 @@ export function DashboardHeader() {
   const pathname = usePathname();
   const title = pageTitles[pathname] || "Dashboard";
   const { toast } = useToast();
+  const { balance, setBalance } = useWallet();
 
-  const [balance, setBalance] = useState(1250.75);
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const [walletDialogMode, setWalletDialogMode] = useState<"add" | "withdraw">("add");
 
