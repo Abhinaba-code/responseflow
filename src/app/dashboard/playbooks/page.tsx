@@ -244,7 +244,7 @@ function PlaybookFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>
             {playbook ? "Edit Playbook" : "Create Playbook"}
@@ -253,33 +253,33 @@ function PlaybookFormDialog({
             Define the trigger and actions for this automated workflow.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-6 py-4">
+        <div className="grid gap-4 py-4">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             <div className="space-y-2">
+             <div className="space-y-1">
                 <Label htmlFor="name">Playbook Name</Label>
                 <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
                 <Label htmlFor="trigger">Trigger</Label>
-                <Input id="trigger" value={trigger} onChange={(e) => setTrigger(e.target.value)} placeholder="e.g., Incident created with severity 'Critical'"/>
+                <Input id="trigger" value={trigger} onChange={(e) => setTrigger(e.target.value)} placeholder="e.g., Incident created..."/>
             </div>
            </div>
-           <div className="space-y-2">
+           <div className="space-y-1">
             <Label htmlFor="description">Description</Label>
-            <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+            <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} className="min-h-[60px]" />
           </div>
           <Separator />
            <div>
-             <Label>Actions</Label>
-             <div className="space-y-4 mt-2">
+             <Label className="text-sm">Actions</Label>
+             <div className="space-y-2 mt-2">
                 {actions.map((action, index) => (
-                    <div key={index} className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-2 p-2 border rounded-lg">
-                        <Input placeholder="Action Type (e.g., Notify)" value={action.type} onChange={(e) => handleActionChange(index, 'type', e.target.value)} />
-                        <Input placeholder="Action Description (e.g., Notify #dev-ops in Slack)" value={action.description} onChange={(e) => handleActionChange(index, 'description', e.target.value)} />
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-2 items-center">
+                        <Input placeholder="Action Type" value={action.type} onChange={(e) => handleActionChange(index, 'type', e.target.value)} className="h-9"/>
+                        <Input placeholder="Description" value={action.description} onChange={(e) => handleActionChange(index, 'description', e.target.value)} className="h-9"/>
                     </div>
                 ))}
              </div>
-             <Button variant="outline" size="sm" className="mt-4" onClick={addAction}>
+             <Button variant="outline" size="sm" className="mt-2" onClick={addAction}>
                 <PlusCircle className="mr-2 h-4 w-4"/> Add Action
              </Button>
            </div>
