@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, LifeBuoy, LogOut, PanelLeft, Search, Settings, User, Wallet, PlusCircle, ArrowDownCircle } from "lucide-react";
+import { Bell, LifeBuoy, LogOut, PanelLeft, Search, Settings, User, Wallet, PlusCircle, ArrowDownCircle, CreditCard } from "lucide-react";
 import { Button } from "./ui/button";
 import { useSidebar } from "./ui/sidebar";
 import Link from "next/link";
@@ -16,6 +16,7 @@ const pageTitles: Record<string, string> = {
     '/dashboard': 'Unified Inbox',
     '/dashboard/analytics': 'Analytics',
     '/dashboard/automations': 'Automations',
+    '/dashboard/billing': 'Billing',
     '/dashboard/customers': 'Customers',
     '/dashboard/developer': 'Developer',
     '/dashboard/developer/api-docs': 'API Documentation',
@@ -141,6 +142,12 @@ export function DashboardHeader() {
                           <LifeBuoy className="mr-2 h-4 w-4" />
                           <span>Help & Support</span>
                       </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/billing">
+                        <CreditCard className="mr-2 h-4 w-4" />
+                        <span>Billing</span>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                       <Link href="/dashboard/settings">
