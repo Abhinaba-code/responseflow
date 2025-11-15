@@ -104,9 +104,9 @@ export default function KnowledgePage() {
                     <div className="space-y-2">
                       {category.articles.map((article) => (
                         <div key={article.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-secondary">
-                          <FileText className="h-5 w-5 text-muted-foreground" />
-                          <div className="flex-1">
-                            <p className="font-medium">{article.title}</p>
+                          <FileText className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium truncate">{article.title}</p>
                             <p className="text-sm text-muted-foreground truncate">{article.content}</p>
                           </div>
                           <Button variant="ghost" size="sm" onClick={() => handleViewArticle(article)}>View</Button>
