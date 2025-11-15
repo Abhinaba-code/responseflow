@@ -248,9 +248,7 @@ export default function Home() {
             <span className="font-headline">ResponseFlow</span>
           </div>
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground mb-4 sm:mb-0">
-            <Link href="/about" className="hover:text-primary">About</Link>
             <Link href="/careers" className="hover:text-primary">Careers</Link>
-            <Link href="/contact" className="hover:text-primary">Contact</Link>
             <Link href="/privacy-policy" className="hover:text-primary">Privacy Policy</Link>
             <Link href="/terms-and-conditions" className="hover:text-primary">Terms & Conditions</Link>
           </nav>
