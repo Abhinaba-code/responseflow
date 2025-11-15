@@ -21,7 +21,7 @@ const enterpriseFeatures = [
 
 
 export default function BillingPage() {
-    const currentPlan = "Pro"; // This would come from user data
+    const currentPlan = "Free"; // This would come from user data
 
   return (
     <div className="flex flex-col h-full bg-background">
