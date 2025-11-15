@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -215,7 +215,7 @@ function PlaybookFormDialog({
   const [trigger, setTrigger] = useState("");
   const [actions, setActions] = useState<Omit<PlaybookAction, 'id'>[]>([{ type: "", description: "" }]);
 
-  useState(() => {
+  useEffect(() => {
     if (playbook) {
       setName(playbook.name);
       setDescription(playbook.description);
@@ -227,7 +227,7 @@ function PlaybookFormDialog({
       setTrigger("");
       setActions([{ type: "", description: "" }]);
     }
-  });
+  }, [playbook]);
 
   const handleActionChange = (index: number, field: 'type' | 'description', value: string) => {
     const newActions = [...actions];
@@ -254,17 +254,19 @@ function PlaybookFormDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-6 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Playbook Name</Label>
-            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div className="space-y-2">
+                <Label htmlFor="name">Playbook Name</Label>
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="trigger">Trigger</Label>
+                <Input id="trigger" value={trigger} onChange={(e) => setTrigger(e.target.value)} placeholder="e.g., Incident created with severity 'Critical'"/>
+            </div>
+           </div>
            <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="trigger">Trigger</Label>
-            <Input id="trigger" value={trigger} onChange={(e) => setTrigger(e.target.value)} placeholder="e.g., Incident created with severity 'Critical'"/>
           </div>
           <Separator />
            <div>
