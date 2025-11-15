@@ -27,7 +27,6 @@ export function MainSidebar() {
         { href: "/dashboard/incidents", icon: ShieldAlert, label: "Incidents" },
         { href: "/dashboard/customers", icon: Users, label: "Customers" },
         { href: "/dashboard/knowledge", icon: BookOpen, label: "Knowledge" },
-        { href: "/dashboard/search", icon: Search, label: "Search", plan: "pro" },
         { href: "/dashboard/developer", icon: Code, label: "Developer", plan: "pro" },
       ],
     },
