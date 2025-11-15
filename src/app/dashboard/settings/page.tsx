@@ -1,4 +1,7 @@
 
+"use client";
+
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,8 +12,18 @@ import { PlusCircle, Trash2 } from "lucide-react";
 import { ChannelIcon } from "@/components/channel-icon";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import type { Channel } from "@/lib/types";
 
-const connectedChannels = [
+type ConnectedChannel = {
+    name: string;
+    type: Channel;
+    connected: boolean;
+};
+
+const initialChannels: ConnectedChannel[] = [
     { name: "Support Email", type: "email", connected: true },
     { name: "Twitter DMs", type: "twitter", connected: true },
     { name: "Slack", type: "discord", connected: false }
@@ -24,10 +37,44 @@ const roles = [
 
 
 export default function SettingsPage() {
+    const { toast } = useToast();
+    const [channels, setChannels] = useState<ConnectedChannel[]>(initialChannels);
+    const [isAddChannelOpen, setIsAddChannelOpen] = useState(false);
+
+    const handleToggleConnect = (channelName: string) => {
+        setChannels(prevChannels =>
+            prevChannels.map(channel => {
+                if (channel.name === channelName) {
+                    const wasConnected = channel.connected;
+                    if (!wasConnected) {
+                        toast({
+                            title: "Channel Connected",
+                            description: `${channel.name} has been successfully connected.`,
+                        });
+                    }
+                    return { ...channel, connected: !wasConnected };
+                }
+                return channel;
+            })
+        );
+    };
+
+    const handleAddChannel = (name: string, type: Channel) => {
+        if (name && type) {
+            setChannels(prev => [...prev, { name, type, connected: true }]);
+            toast({
+                title: "Channel Added",
+                description: `${name} has been successfully added and connected.`,
+            });
+            setIsAddChannelOpen(false);
+        }
+    };
+
+
   return (
     <div className="flex flex-col h-full bg-background">
       <div className="flex-1 overflow-auto p-6">
-        <Tabs defaultValue="theme">
+        <Tabs defaultValue="channels">
           <TabsList className="grid w-full grid-cols-4 max-w-lg">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="channels">Channels</TabsTrigger>
@@ -63,22 +110,30 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex justify-end mb-4">
-                    <Button>
-                        <PlusCircle className="mr-2 h-4 w-4"/>
-                        Add Channel
-                    </Button>
+                    <Dialog open={isAddChannelOpen} onOpenChange={setIsAddChannelOpen}>
+                        <DialogTrigger asChild>
+                            <Button>
+                                <PlusCircle className="mr-2 h-4 w-4"/>
+                                Add Channel
+                            </Button>
+                        </DialogTrigger>
+                        <AddChannelDialog onAddChannel={handleAddChannel} />
+                    </Dialog>
                 </div>
                 <div className="space-y-4">
-                    {connectedChannels.map(channel => (
+                    {channels.map(channel => (
                         <div key={channel.name} className="flex items-center justify-between rounded-lg border p-4">
                             <div className="flex items-center gap-3">
-                                <ChannelIcon channel={channel.type as any} className="h-6 w-6" />
+                                <ChannelIcon channel={channel.type} className="h-6 w-6" />
                                 <div>
                                     <p className="font-medium">{channel.name}</p>
                                     <p className="text-sm text-muted-foreground">{channel.type.charAt(0).toUpperCase() + channel.type.slice(1)}</p>
                                 </div>
                             </div>
-                            <Button variant={channel.connected ? "secondary" : "default"}>
+                             <Button 
+                                variant={channel.connected ? "secondary" : "default"}
+                                onClick={() => handleToggleConnect(channel.name)}
+                            >
                                 {channel.connected ? "Manage" : "Connect"}
                             </Button>
                         </div>
@@ -178,3 +233,54 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+
+function AddChannelDialog({ onAddChannel }: { onAddChannel: (name: string, type: Channel) => void }) {
+    const [name, setName] = useState('');
+    const [type, setType] = useState<Channel | ''>('');
+
+    const handleSubmit = () => {
+        if(name && type) {
+            onAddChannel(name, type);
+            setName('');
+            setType('');
+        }
+    };
+
+    return (
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Add a New Channel</DialogTitle>
+                <DialogDescription>Connect a new source for your customer messages.</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="channel-name" className="text-right">Name</Label>
+                    <Input id="channel-name" value={name} onChange={(e) => setName(e.target.value)} className="col-span-3" placeholder="e.g., Marketing Email" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="channel-type" className="text-right">Type</Label>
+                    <Select value={type} onValueChange={(value: Channel) => setType(value)}>
+                        <SelectTrigger className="col-span-3">
+                            <SelectValue placeholder="Select channel type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="email">Email</SelectItem>
+                            <SelectItem value="twitter">Twitter</SelectItem>
+                            <SelectItem value="facebook">Facebook</SelectItem>
+                            <SelectItem value="instagram">Instagram</SelectItem>
+                            <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                            <SelectItem value="live_chat">Live Chat</SelectItem>
+                            <SelectItem value="discord">Discord</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+            <DialogFooter>
+                <Button variant="outline" onClick={() => (document.querySelector('[data-radix-collection-item] > [role=dialog] [aria-label=Close]') as HTMLElement)?.click()}>Cancel</Button>
+                <Button onClick={handleSubmit}>Add Channel</Button>
+            </DialogFooter>
+        </DialogContent>
+    );
+}
+
