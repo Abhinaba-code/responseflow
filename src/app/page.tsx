@@ -241,8 +241,21 @@ export default function Home() {
         </section>
 
       </main>
+      <footer className="border-t">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-lg mb-4 sm:mb-0">
+            <MessageCircle className="h-6 w-6 text-primary" />
+            <span className="font-headline">ResponseFlow</span>
+          </div>
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground mb-4 sm:mb-0">
+            <Link href="/about" className="hover:text-primary">About</Link>
+            <Link href="/contact" className="hover:text-primary">Contact</Link>
+            <Link href="/privacy-policy" className="hover:text-primary">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-primary">Terms & Conditions</Link>
+          </nav>
+          <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} ResponseFlow. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }
-
-    
