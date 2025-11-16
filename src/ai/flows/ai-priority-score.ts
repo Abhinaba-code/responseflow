@@ -34,18 +34,14 @@ export async function calculatePriorityScore(input: CalculatePriorityScoreInput)
   return calculatePriorityScoreFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'calculatePriorityScorePrompt',
-  input: {schema: CalculatePriorityScoreInputSchema},
-  output: {schema: CalculatePriorityScoreOutputSchema},
-  prompt: `You are an expert AI at triaging customer support tickets. Your task is to generate a priority score from 0 to 100 for a new ticket based on multiple signals.
+const promptTemplate = `You are an expert AI at triaging customer support tickets. Your task is to generate a priority score from 0 to 100 for a new ticket based on multiple signals.
 
   Consider the following factors:
   - Urgency: Look for keywords like "urgent", "asap", "down", "broken", "refund", "can't log in". High urgency should significantly increase the score.
   - Sentiment: Negative sentiment should increase the score. Positive sentiment can lower it unless it's sarcastic.
   - Channel: Real-time channels like 'live_chat' or public channels like 'twitter' might be higher priority.
   - VIP Status: If the 'VIP' tag is present, the score should be much higher.
-  - SLA Risk: Compare the slaDue time with the current time. If a breach is imminent, the score should be very high. Assume current time is ${new Date().toISOString()}.
+  - SLA Risk: Compare the slaDue time with the current time. If a breach is imminent, the score should be very high. Assume current time is {{currentDate}}.
   - Topic: Billing issues, complaints, and bugs are generally higher priority than general questions or feature requests.
 
   Based on the ticket below, calculate a priority score, determine the priority level (P0 for >90, P1 for 75-89, P2 for 50-74, P3 for <50), and provide a brief reasoning.
@@ -57,8 +53,7 @@ const prompt = ai.definePrompt({
   - Sentiment: {{{sentiment}}}
   - Tags: {{#if tags}}{{#each tags}}{{{this}}} {{/each}}{{else}}None{{/if}}
   - SLA Due: {{{slaDue}}}
-  `,
-});
+  `;
 
 const calculatePriorityScoreFlow = ai.defineFlow(
   {
@@ -67,7 +62,21 @@ const calculatePriorityScoreFlow = ai.defineFlow(
     outputSchema: CalculatePriorityScoreOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
+    const prompt = ai.definePrompt({
+        name: 'calculatePriorityScorePrompt',
+        input: {
+            schema: CalculatePriorityScoreInputSchema.extend({
+                currentDate: z.string(),
+            }),
+        },
+        output: {schema: CalculatePriorityScoreOutputSchema},
+        prompt: promptTemplate,
+    });
+
+    const {output} = await prompt({
+        ...input,
+        currentDate: new Date().toISOString(),
+    });
     return output!;
   }
 );
