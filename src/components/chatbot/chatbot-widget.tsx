@@ -232,11 +232,6 @@ export function ChatbotWidget() {
             transform: `translate(-50%, -50%)`,
           }}
           onMouseDown={onMouseDown}
-          onClick={(e) => {
-            if (hasBeenDragged.current) {
-                e.preventDefault();
-            }
-          }}
         >
           <Bot className="h-6 w-6" />
         </Button>
@@ -317,5 +312,3 @@ export function ChatbotWidget() {
     </Popover>
   );
 }
-
-    
