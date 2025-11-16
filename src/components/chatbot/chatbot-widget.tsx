@@ -141,42 +141,43 @@ export function ChatbotWidget() {
 
   const handleSend = () => {
     if (!input.trim()) return;
-    const userMessage: Message = { role: "user", content: input };
+    const userMessage: Message = { role: 'user', content: input };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
-    setInput("");
+    const currentInput = input;
+    setInput('');
 
     startTransition(async () => {
       try {
         const result = await chatbotAction({
-            query: input,
-            history: messages,
+          query: currentInput,
+          history: messages,
         });
 
         if (result.success && result.response) {
-            setMessages([
+          setMessages([
             ...newMessages,
-            { role: "model", content: result.response },
-            ]);
-            await handleTextToSpeech(result.response);
+            { role: 'model', content: result.response },
+          ]);
+          await handleTextToSpeech(result.response);
         } else {
-            toast({
-            variant: "destructive",
-            title: "Chatbot Error",
-            description: result.error || "Something went wrong.",
-            });
-            // Remove the user message if the API call fails
-            setMessages(messages);
+          toast({
+            variant: 'destructive',
+            title: 'Chatbot Error',
+            description: result.error || 'Something went wrong.',
+          });
+          // Remove the user message if the API call fails
+          setMessages(messages);
         }
-    } catch(e) {
+      } catch (e) {
         console.error(e);
         toast({
-            variant: "destructive",
-            title: "Chatbot Error",
-            description: "An unexpected error occurred.",
+          variant: 'destructive',
+          title: 'Chatbot Error',
+          description: 'An unexpected error occurred.',
         });
         setMessages(messages);
-    }
+      }
     });
   };
 
@@ -214,8 +215,12 @@ export function ChatbotWidget() {
 
   const onMouseUp = () => {
     if (isDragging) {
+      if (!hasBeenDragged.current) {
+        setIsOpen((v) => !v);
+      }
       setTimeout(() => {
         setIsDragging(false);
+        hasBeenDragged.current = false;
       }, 0);
     }
   };
@@ -223,10 +228,11 @@ export function ChatbotWidget() {
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (hasBeenDragged.current) {
         e.preventDefault();
-        hasBeenDragged.current = false; // Reset for next click
         return;
     }
-    setIsOpen((v) => !v);
+    if (!isDragging) {
+      setIsOpen((v) => !v);
+    }
   }
 
 
