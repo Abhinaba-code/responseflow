@@ -286,7 +286,7 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
                   <div>
                     <p className="font-semibold">{ticket.requester.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {ticket.status}
+                      {customerDetails?.openTickets} open tickets
                     </p>
                   </div>
                 </CardContent>
