@@ -142,7 +142,6 @@ export function ChatbotWidget() {
   const handleSend = () => {
     if (!input.trim()) return;
     const userMessage: Message = { role: "user", content: input };
-    const currentMessages = messages;
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput("");
@@ -150,7 +149,7 @@ export function ChatbotWidget() {
     startTransition(async () => {
       const result = await chatbotAction({
         query: input,
-        history: currentMessages,
+        history: messages,
       });
 
       if (result.success && result.response) {
@@ -166,7 +165,7 @@ export function ChatbotWidget() {
           description: result.error || "Something went wrong.",
         });
         // Remove the user message if the API call fails
-         setMessages(currentMessages);
+         setMessages(messages);
       }
     });
   };
@@ -211,13 +210,11 @@ export function ChatbotWidget() {
   };
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (isDragging) {
-      e.preventDefault();
-      return;
+    if (hasBeenDragged.current) {
+        e.preventDefault();
+        return;
     }
-    if (!hasBeenDragged.current) {
-      setIsOpen((prev) => !prev);
-    }
+    setIsOpen((prev) => !prev);
   }
 
 
@@ -248,7 +245,13 @@ export function ChatbotWidget() {
             transform: `translate(-50%, -50%)`,
           }}
           onMouseDown={onMouseDown}
-          onClick={onClick}
+          onClick={(e) => {
+            if (hasBeenDragged.current) {
+              e.preventDefault();
+              return;
+            }
+            setIsOpen((v) => !v);
+          }}
         >
           <Bot className="h-6 w-6" />
         </Button>
