@@ -7,9 +7,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { MessagesSquare, Mail, MapPin, User } from 'lucide-react';
+import { MessagesSquare, Mail, MapPin, User, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export default function ContactPage() {
   const { toast } = useToast();
@@ -17,6 +24,8 @@ export default function ContactPage() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
 
   const handleSendMessage = () => {
     if (!firstName || !email || !message) {
@@ -48,11 +57,28 @@ export default function ContactPage() {
           <MessagesSquare className="h-7 w-7 text-primary" />
           <span className="font-headline">ResponseFlow</span>
         </Link>
-        <nav>
+        <nav className="hidden md:flex items-center gap-4">
           <Button variant="ghost" asChild>
             <Link href="/">Back to Home</Link>
           </Button>
         </nav>
+        <div className="md:hidden">
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-4 mt-8">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Home</Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </header>
 
       <main className="flex-1">

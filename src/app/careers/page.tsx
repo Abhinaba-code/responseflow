@@ -1,10 +1,22 @@
 
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { MessagesSquare, Briefcase, Building, MapPin, ArrowRight } from 'lucide-react';
+import { MessagesSquare, Briefcase, Building, MapPin, ArrowRight, Menu } from 'lucide-react';
 import Link from 'next/link';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export default function CareersPage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const jobOpenings = [
     {
       title: 'Senior Frontend Engineer',
@@ -30,11 +42,28 @@ export default function CareersPage() {
           <MessagesSquare className="h-7 w-7 text-primary" />
           <span className="font-headline">ResponseFlow</span>
         </Link>
-        <nav>
+        <nav className="hidden md:flex items-center gap-4">
           <Button variant="ghost" asChild>
             <Link href="/">Back to Home</Link>
           </Button>
         </nav>
+        <div className="md:hidden">
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-4 mt-8">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Home</Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </header>
       <main className="flex-1">
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">

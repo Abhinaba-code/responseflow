@@ -13,6 +13,8 @@ import { cn } from '@/lib/utils';
 import {
   Sheet,
   SheetContent,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 
@@ -74,6 +76,9 @@ export default function Home() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
               <nav className="flex flex-col gap-4 mt-8">
                 <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">About</Link>
                 <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-lg">Contact</Link>
