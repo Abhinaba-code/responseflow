@@ -58,46 +58,45 @@ export function ChatbotWidget() {
 
   useEffect(() => {
     // SpeechRecognition is a browser-only API
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = "en-US";
+    if (typeof window !== 'undefined') {
+        const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = "en-US";
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setInput(transcript);
-        setIsListening(false);
-      };
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            setInput(transcript);
+            setIsListening(false);
+        };
 
-      recognition.onerror = (event) => {
-        if (event.error === 'no-speech' || event.error === 'aborted') {
-          // Don't show an error for these common cases
-          setIsListening(false);
-          return;
+        recognition.onerror = (event) => {
+            if (event.error === 'no-speech' || event.error === 'aborted') {
+            // Don't show an error for these common cases
+            setIsListening(false);
+            return;
+            }
+            console.error("Speech recognition error", event.error);
+            toast({
+                variant: "destructive",
+                title: "Voice Error",
+                description: "Sorry, I couldn't understand that. Please try again.",
+            });
+            setIsListening(false);
+        };
+        
+        recognition.onend = () => {
+            setIsListening(false);
+        };
+
+        recognitionRef.current = recognition;
+        } else {
+            // We can toast here, but it might be annoying for users without support.
+            // console.log("Speech recognition not supported in this browser.");
         }
-        console.error("Speech recognition error", event.error);
-        toast({
-            variant: "destructive",
-            title: "Voice Error",
-            description: "Sorry, I couldn't understand that. Please try again.",
-        });
-        setIsListening(false);
-      };
-      
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-
-      recognitionRef.current = recognition;
-    } else {
-        toast({
-            variant: "destructive",
-            title: "Voice Not Supported",
-            description: "Your browser does not support voice recognition.",
-        });
     }
   }, [toast]);
 
@@ -115,27 +114,34 @@ export function ChatbotWidget() {
   };
 
   const handleTextToSpeech = async (text: string) => {
-    const result = await textToSpeechAction({ text });
-    if (result.success && result.audio) {
-      playAudio(result.audio);
-    } else {
-      toast({
-        variant: "destructive",
-        title: "Speech Error",
-        description: result.error || "Could not play audio.",
-      });
-    }
+    startTransition(async () => {
+        const result = await textToSpeechAction({ text });
+        if (result.success && result.audio) {
+            playAudio(result.audio);
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Speech Error",
+                description: result.error || "Could not play audio.",
+            });
+        }
+    });
   };
   
   const handleVoiceInput = () => {
     if (recognitionRef.current) {
       if (isListening) {
         recognitionRef.current.stop();
-        setIsListening(false);
       } else {
         recognitionRef.current.start();
         setIsListening(true);
       }
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Voice Not Supported",
+            description: "Your browser does not support voice recognition.",
+        });
     }
   };
 
@@ -149,24 +155,25 @@ export function ChatbotWidget() {
 
     startTransition(async () => {
       try {
+        const chatHistory = newMessages.map(m => `${m.role}: ${m.content}`);
         const result = await chatbotAction({
-          query: currentInput,
-          history: messages,
+          history: chatHistory,
         });
 
         if (result.success && result.response) {
+          const modelMessage: Message = { role: 'model', content: result.response };
           setMessages([
             ...newMessages,
-            { role: 'model', content: result.response },
+            modelMessage,
           ]);
-          await handleTextToSpeech(result.response);
+          await handleTextToSpeech(modelMessage.content);
         } else {
           toast({
             variant: 'destructive',
             title: 'Chatbot Error',
             description: result.error || 'Something went wrong.',
           });
-          // Remove the user message if the API call fails
+          // Revert the message list if the API call fails
           setMessages(messages);
         }
       } catch (e) {
@@ -215,12 +222,8 @@ export function ChatbotWidget() {
 
   const onMouseUp = () => {
     if (isDragging) {
-      if (!hasBeenDragged.current) {
-        setIsOpen((v) => !v);
-      }
       setTimeout(() => {
         setIsDragging(false);
-        hasBeenDragged.current = false;
       }, 0);
     }
   };
@@ -228,11 +231,10 @@ export function ChatbotWidget() {
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (hasBeenDragged.current) {
         e.preventDefault();
+        hasBeenDragged.current = false; // Reset for next interaction
         return;
     }
-    if (!isDragging) {
-      setIsOpen((v) => !v);
-    }
+    setIsOpen((v) => !v);
   }
 
 
@@ -287,7 +289,7 @@ export function ChatbotWidget() {
                 const lastMessage = messages.findLast(m => m.role === 'model');
                 if (lastMessage) handleTextToSpeech(lastMessage.content);
               }}
-              disabled={isSpeaking}
+              disabled={isSpeaking || isPending}
             >
               <Volume2 className="h-5 w-5" />
             </Button>
@@ -334,7 +336,7 @@ export function ChatbotWidget() {
                 size="icon"
                 className="h-8 w-8"
                 onClick={handleSend}
-                disabled={isPending}
+                disabled={isPending || !input.trim()}
                 >
                 <Send className="h-4 w-4" />
                 </Button>
@@ -345,3 +347,5 @@ export function ChatbotWidget() {
     </Popover>
   );
 }
+
+    

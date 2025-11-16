@@ -67,26 +67,20 @@ export async function calculatePriorityScoreAction(input: CalculatePriorityScore
 
 
 const ChatbotActionInput = z.object({
-  query: z.string(),
-  history: z.array(
-    z.object({
-      role: z.enum(["user", "model"]),
-      content: z.string(),
-    })
-  ),
+  history: z.array(z.string()),
 });
 
 
-export async function chatbotAction(input: ChatbotInput) {
+export async function chatbotAction(input: z.infer<typeof ChatbotActionInput>) {
   const parsedInput = ChatbotActionInput.safeParse(input);
   if (!parsedInput.success) {
     return { success: false, error: "Invalid input." };
   }
   try {
-    const result = await chatbot(input);
+    const result = await chatbot({ history: input.history });
     return { success: true, response: result.response };
   } catch (error) {
-    console.error(error);
+    console.error("Chatbot action error:", error);
     return { success: false, error: "Failed to get a response from the chatbot." };
   }
 }
@@ -108,3 +102,5 @@ export async function textToSpeechAction(input: z.infer<typeof TextToSpeechActio
         return { success: false, error: "Failed to convert text to speech." };
     }
 }
+
+    

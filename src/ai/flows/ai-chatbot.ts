@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -11,22 +12,14 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-const ChatMessageSchema = z.object({
-  role: z.enum(['user', 'model']),
-  content: z.string(),
-});
-
 const ChatbotInputSchema = z.object({
-  query: z.string().describe('The user\'s latest message.'),
-  history: z.array(ChatMessageSchema).describe('The conversation history.'),
+  history: z.array(z.string()).describe('The conversation history, with each string formatted as "role: content".'),
 });
-
 export type ChatbotInput = z.infer<typeof ChatbotInputSchema>;
 
 const ChatbotOutputSchema = z.object({
-  response: z.string().describe('The AI\'s response to the user query.'),
+  response: z.string().describe("The AI's response to the user's latest message."),
 });
-
 export type ChatbotOutput = z.infer<typeof ChatbotOutputSchema>;
 
 export async function chatbot(input: ChatbotInput): Promise<ChatbotOutput> {
@@ -38,22 +31,17 @@ const prompt = ai.definePrompt({
   input: { schema: ChatbotInputSchema },
   output: { schema: ChatbotOutputSchema },
   prompt: `You are a helpful AI assistant for a customer support platform called "ResponseFlow".
-  Your goal is to assist users with their questions about the platform.
-  Be friendly, concise, and helpful.
+Your goal is to assist users with their questions about the platform.
+Be friendly, concise, and helpful.
 
-  Use the provided conversation history to maintain context.
+Use the provided conversation history to maintain context. The last message in the history is the user's current query.
 
-  {{#if history}}
-  Conversation History:
-  {{#each history}}
-  {{role}}: {{content}}
-  {{/each}}
-  {{/if}}
+Conversation History:
+{{#each history}}
+{{{this}}}
+{{/each}}
 
-  User's latest message:
-  {{{query}}}
-
-  Your response:
+Your response:
   `,
 });
 
@@ -69,3 +57,5 @@ const chatbotFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    
