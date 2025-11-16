@@ -213,12 +213,17 @@ export function ChatbotWidget() {
   };
 
   const onMouseUp = () => {
-    setIsDragging(false);
+    if (isDragging) {
+      setTimeout(() => {
+        setIsDragging(false);
+      }, 0);
+    }
   };
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (hasBeenDragged.current) {
         e.preventDefault();
+        hasBeenDragged.current = false; // Reset for next click
         return;
     }
     setIsOpen((v) => !v);
