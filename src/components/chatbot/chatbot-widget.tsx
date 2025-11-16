@@ -147,26 +147,36 @@ export function ChatbotWidget() {
     setInput("");
 
     startTransition(async () => {
-      const result = await chatbotAction({
-        query: input,
-        history: messages,
-      });
-
-      if (result.success && result.response) {
-        setMessages([
-          ...newMessages,
-          { role: "model", content: result.response },
-        ]);
-        await handleTextToSpeech(result.response);
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Chatbot Error",
-          description: result.error || "Something went wrong.",
+      try {
+        const result = await chatbotAction({
+            query: input,
+            history: messages,
         });
-        // Remove the user message if the API call fails
-         setMessages(messages);
-      }
+
+        if (result.success && result.response) {
+            setMessages([
+            ...newMessages,
+            { role: "model", content: result.response },
+            ]);
+            await handleTextToSpeech(result.response);
+        } else {
+            toast({
+            variant: "destructive",
+            title: "Chatbot Error",
+            description: result.error || "Something went wrong.",
+            });
+            // Remove the user message if the API call fails
+            setMessages(messages);
+        }
+    } catch(e) {
+        console.error(e);
+        toast({
+            variant: "destructive",
+            title: "Chatbot Error",
+            description: "An unexpected error occurred.",
+        });
+        setMessages(messages);
+    }
     });
   };
 
@@ -204,9 +214,6 @@ export function ChatbotWidget() {
 
   const onMouseUp = () => {
     setIsDragging(false);
-    if (!hasBeenDragged.current) {
-        setIsOpen((prev) => !prev);
-    }
   };
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -214,7 +221,7 @@ export function ChatbotWidget() {
         e.preventDefault();
         return;
     }
-    setIsOpen((prev) => !prev);
+    setIsOpen((v) => !v);
   }
 
 
@@ -230,6 +237,7 @@ export function ChatbotWidget() {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDragging]);
 
   return (
@@ -245,13 +253,7 @@ export function ChatbotWidget() {
             transform: `translate(-50%, -50%)`,
           }}
           onMouseDown={onMouseDown}
-          onClick={(e) => {
-            if (hasBeenDragged.current) {
-              e.preventDefault();
-              return;
-            }
-            setIsOpen((v) => !v);
-          }}
+          onClick={onClick}
         >
           <Bot className="h-6 w-6" />
         </Button>
