@@ -2,7 +2,10 @@
  * @fileoverview This file is the Next.js API route for Genkit.
  */
 
-import {createApi} from '@genkit-ai/next';
+import {createApiHandler} from '@genkit-ai/next';
+import {ai} from '@/ai/genkit';
 import '@/ai/dev';
 
-export const {GET, POST} = createApi();
+export const {GET, POST} = createApiHandler({
+    ai,
+});
