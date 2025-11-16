@@ -1,8 +1,7 @@
 
+'use client';
 
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -60,9 +59,7 @@ const themes = [
 ];
 
 
-export default function SettingsPage() {
-    const searchParams = useSearchParams();
-    const tab = searchParams.get('tab') || 'channels';
+function SettingsPageContent({ tab }: { tab: string }) {
     const { toast } = useToast();
     const { name, setName } = useUser();
     const [channels, setChannels] = useState<ConnectedChannel[]>(initialChannels);
@@ -420,4 +417,19 @@ function CreateRoleDialog({ onCreateRole, onOpenChange }: { onCreateRole: (name:
             </DialogFooter>
         </DialogContent>
     );
+}
+
+
+export default function SettingsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SettingsPageWithSearchParams />
+        </Suspense>
+    )
+}
+
+function SettingsPageWithSearchParams() {
+    const searchParams = useSearchParams();
+    const tab = searchParams.get('tab') || 'channels';
+    return <SettingsPageContent tab={tab} />
 }
