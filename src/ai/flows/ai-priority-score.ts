@@ -30,9 +30,6 @@ const CalculatePriorityScoreOutputSchema = z.object({
 
 export type CalculatePriorityScoreOutput = z.infer<typeof CalculatePriorityScoreOutputSchema>;
 
-export async function calculatePriorityScore(input: CalculatePriorityScoreInput): Promise<CalculatePriorityScoreOutput> {
-  return calculatePriorityScoreFlow(input);
-}
 
 const prompt = ai.definePrompt({
     name: 'calculatePriorityScorePrompt',
@@ -78,3 +75,8 @@ const calculatePriorityScoreFlow = ai.defineFlow(
     return output!;
   }
 );
+
+
+export async function calculatePriorityScore(input: CalculatePriorityScoreInput): Promise<CalculatePriorityScoreOutput> {
+  return calculatePriorityScoreFlow(input);
+}
