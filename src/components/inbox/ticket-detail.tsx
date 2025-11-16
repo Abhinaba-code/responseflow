@@ -1,84 +1,172 @@
-"use client";
-import { useState, useTransition, useEffect } from "react";
-import type { Ticket } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ChannelIcon } from "@/components/channel-icon";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+'use client';
+import { useState, useTransition, useEffect } from 'react';
+import type { Ticket } from '@/lib/types';
+import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ChannelIcon } from '@/components/channel-icon';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import {
   Bot,
   CornerDownLeft,
   Paperclip,
   Sparkles,
   Users,
-  BrainCircuit
-} from "lucide-react";
-import { SlaTimer } from "@/components/sla-timer";
-import { format } from "date-fns";
-import { suggestRepliesAction, summarizeTicketAction, calculatePriorityScoreAction } from "@/app/actions";
-import { useToast } from "@/hooks/use-toast";
-import { PriorityScore } from "./priority-score";
+  BrainCircuit,
+  Mail,
+  MessageSquare,
+  Smile,
+  Frown,
+  Meh,
+  Calendar,
+} from 'lucide-react';
+import { SlaTimer } from '@/components/sla-timer';
+import { format, formatDistanceToNow } from 'date-fns';
+import { suggestRepliesAction, summarizeTicketAction } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
+import { PriorityScore } from './priority-score';
+import { initialCustomers, type Customer } from '@/lib/data';
 
 type TicketDetailProps = {
   ticket: Ticket | undefined;
 };
 
-const priorityClasses: { [key in Ticket["priority"]]: string } = {
-  P0: "border-red-500/50 text-red-500",
-  P1: "border-orange-500/50 text-orange-500",
-  P2: "border-yellow-500/50 text-yellow-500",
-  P3: "border-green-500/50 text-green-500",
+const priorityClasses: { [key in Ticket['priority']]: string } = {
+  P0: 'border-red-500/50 text-red-500',
+  P1: 'border-orange-500/50 text-orange-500',
+  P2: 'border-yellow-500/50 text-yellow-500',
+  P3: 'border-green-500/50 text-green-500',
 };
+
+const sentimentIcon = (sentiment: Ticket['sentiment']) => {
+  switch (sentiment) {
+    case 'Positive':
+      return <Smile className="h-4 w-4 text-green-500" />;
+    case 'Negative':
+      return <Frown className="h-4 w-4 text-red-500" />;
+    default:
+      return <Meh className="h-4 w-4 text-gray-500" />;
+  }
+};
+
+function CustomerDetailDialog({
+  open,
+  onOpenChange,
+  customer,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  customer: Customer | null;
+}) {
+  if (!customer) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-3">
+            <Avatar>
+              <AvatarFallback>{customer.avatar}</AvatarFallback>
+            </Avatar>
+            {customer.name}
+          </DialogTitle>
+          <DialogDescription>Customer Details</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <div className="flex items-center gap-3">
+            <Mail className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm">{customer.email}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm">
+              {customer.openTickets} open tickets / {customer.totalTickets} total
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            {sentimentIcon(customer.avgSentiment)}
+            <span className="text-sm">
+              {customer.avgSentiment} average sentiment
+            </span>
+          </div>
+           <div className="flex items-center gap-3">
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm">
+              Last contact: {formatDistanceToNow(new Date(customer.lastContact), { addSuffix: true })}
+            </span>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button onClick={() => onOpenChange(false)}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 
 export function TicketDetail({ ticket }: TicketDetailProps) {
   const { toast } = useToast();
   const [isSummarizing, startSummaryTransition] = useTransition();
   const [isSuggesting, startSuggestionTransition] = useTransition();
-  const [summary, setSummary] = useState("");
+  const [summary, setSummary] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [reply, setReply] = useState("");
-  const [formattedLastUpdate, setFormattedLastUpdate] = useState("");
-  const [formattedMessageTimestamps, setFormattedMessageTimestamps] = useState<{[key: string]: string}>({});
+  const [reply, setReply] = useState('');
+  const [formattedLastUpdate, setFormattedLastUpdate] = useState('');
+  const [formattedMessageTimestamps, setFormattedMessageTimestamps] = useState<{
+    [key: string]: string;
+  }>({});
+  const [customerDetails, setCustomerDetails] = useState<Customer | null>(null);
+  const [isCustomerDialogOpen, setIsCustomerDialogOpen] = useState(false);
+
 
   useEffect(() => {
     if (ticket) {
-      // Safely format dates only on the client
-      setFormattedLastUpdate(format(new Date(ticket.lastUpdate), "PPp"));
-      const timestamps = ticket.messages.reduce((acc, message) => {
-        acc[message.id] = format(new Date(message.timestamp), "p");
-        return acc;
-      }, {} as {[key: string]: string});
+      setFormattedLastUpdate(format(new Date(ticket.lastUpdate), 'PPp'));
+      const timestamps = ticket.messages.reduce(
+        (acc, message) => {
+          acc[message.id] = format(new Date(message.timestamp), 'p');
+          return acc;
+        },
+        {} as { [key: string]: string }
+      );
       setFormattedMessageTimestamps(timestamps);
-      
-      // Reset AI features on ticket change
-      setSummary("");
+
+      const customer = initialCustomers.find(
+        (c) => c.email === ticket.requester.email
+      );
+      setCustomerDetails(customer || null);
+
+      setSummary('');
       setSuggestions([]);
-      setReply("");
+      setReply('');
     }
   }, [ticket]);
 
   const handleSummarize = () => {
     if (!ticket) return;
-    const ticketDetails = ticket.messages.map(m => `${m.authorName}: ${m.text}`).join("\n");
+    const ticketDetails = ticket.messages
+      .map((m) => `${m.authorName}: ${m.text}`)
+      .join('\n');
     startSummaryTransition(async () => {
       const result = await summarizeTicketAction({ ticketDetails });
       if (result.success) {
         setSummary(result.summary);
       } else {
         toast({
-          variant: "destructive",
-          title: "Summarization Failed",
+          variant: 'destructive',
+          title: 'Summarization Failed',
           description: result.error,
         });
       }
@@ -94,14 +182,14 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
         setSuggestions(result.suggestions);
       } else {
         toast({
-          variant: "destructive",
-          title: "Suggestion Failed",
+          variant: 'destructive',
+          title: 'Suggestion Failed',
           description: result.error,
         });
       }
     });
   };
-  
+
   if (!ticket) {
     return (
       <div className="hidden md:flex flex-1 items-center justify-center h-full">
@@ -123,12 +211,15 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
         <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
           <div className="flex items-center gap-1">
             <ChannelIcon channel={ticket.channel} />
-            <span>{ticket.channel.replace("_", " ")}</span>
+            <span>{ticket.channel.replace('_', ' ')}</span>
           </div>
           <span>&middot;</span>
           <span>{formattedLastUpdate}</span>
           <div className="ml-auto flex items-center gap-3">
-            <Badge variant="outline" className={cn(priorityClasses[ticket.priority])}>
+            <Badge
+              variant="outline"
+              className={cn(priorityClasses[ticket.priority])}
+            >
               {ticket.priority}
             </Badge>
             <SlaTimer slaDue={ticket.slaDue} />
@@ -143,8 +234,8 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
               <div
                 key={message.id}
                 className={cn(
-                  "flex items-start gap-3",
-                  message.author === "agent" && "flex-row-reverse"
+                  'flex items-start gap-3',
+                  message.author === 'agent' && 'flex-row-reverse'
                 )}
               >
                 <Avatar>
@@ -152,14 +243,21 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
                 </Avatar>
                 <div
                   className={cn(
-                    "max-w-md w-fit rounded-lg px-4 py-2",
-                    message.author === "user"
-                      ? "bg-secondary"
-                      : "bg-primary text-primary-foreground"
+                    'max-w-md w-fit rounded-lg px-4 py-2',
+                    message.author === 'user'
+                      ? 'bg-secondary'
+                      : 'bg-primary text-primary-foreground'
                   )}
                 >
                   <p className="text-sm">{message.text}</p>
-                   <p className={cn("text-xs mt-1", message.author === 'user' ? 'text-muted-foreground' : 'text-primary-foreground/70')}>
+                  <p
+                    className={cn(
+                      'text-xs mt-1',
+                      message.author === 'user'
+                        ? 'text-muted-foreground'
+                        : 'text-primary-foreground/70'
+                    )}
+                  >
                     {formattedMessageTimestamps[message.id]}
                   </p>
                 </div>
@@ -171,7 +269,10 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
         <aside className="w-80 border-l bg-secondary/50 flex-shrink-0">
           <ScrollArea className="h-full">
             <div className="p-4 space-y-4">
-              <Card>
+              <Card
+                className="cursor-pointer"
+                onClick={() => setIsCustomerDialogOpen(true)}
+              >
                 <CardHeader className="p-4">
                   <CardTitle className="text-base flex items-center justify-between">
                     Customer
@@ -184,7 +285,9 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
                   </Avatar>
                   <div>
                     <p className="font-semibold">{ticket.requester.name}</p>
-                    <p className="text-sm text-muted-foreground">{ticket.status}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {ticket.status}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -198,20 +301,40 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 pt-0 space-y-2">
-                  <Button onClick={handleSummarize} disabled={isSummarizing} size="sm" variant="outline" className="w-full">
-                    {isSummarizing ? "Summarizing..." : "Summarize Conversation"}
+                  <Button
+                    onClick={handleSummarize}
+                    disabled={isSummarizing}
+                    size="sm"
+                    variant="outline"
+                    className="w-full"
+                  >
+                    {isSummarizing
+                      ? 'Summarizing...'
+                      : 'Summarize Conversation'}
                   </Button>
                   {summary && (
-                    <div className="text-xs text-muted-foreground border p-2 rounded-md bg-background">{summary}</div>
+                    <div className="text-xs text-muted-foreground border p-2 rounded-md bg-background">
+                      {summary}
+                    </div>
                   )}
-                  <Button onClick={handleSuggestReplies} disabled={isSuggesting} size="sm" variant="outline" className="w-full">
+                  <Button
+                    onClick={handleSuggestReplies}
+                    disabled={isSuggesting}
+                    size="sm"
+                    variant="outline"
+                    className="w-full"
+                  >
                     <Sparkles className="mr-2 h-4 w-4" />
-                    {isSuggesting ? "Generating..." : "Suggest Replies"}
+                    {isSuggesting ? 'Generating...' : 'Suggest Replies'}
                   </Button>
                   {suggestions.length > 0 && (
-                     <div className="space-y-2 pt-2">
+                    <div className="space-y-2 pt-2">
                       {suggestions.map((s, i) => (
-                        <div key={i} onClick={() => setReply(s)} className="text-xs text-muted-foreground border p-2 rounded-md bg-background hover:bg-secondary cursor-pointer">
+                        <div
+                          key={i}
+                          onClick={() => setReply(s)}
+                          className="text-xs text-muted-foreground border p-2 rounded-md bg-background hover:bg-secondary cursor-pointer"
+                        >
                           {s}
                         </div>
                       ))}
@@ -240,6 +363,11 @@ export function TicketDetail({ ticket }: TicketDetailProps) {
           </div>
         </div>
       </footer>
+       <CustomerDetailDialog
+        open={isCustomerDialogOpen}
+        onOpenChange={setIsCustomerDialogOpen}
+        customer={customerDetails}
+      />
     </div>
   );
 }
