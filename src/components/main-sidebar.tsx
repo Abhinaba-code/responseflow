@@ -10,7 +10,7 @@ import {
   SidebarSeparator,
   SidebarContent,
 } from "@/components/ui/sidebar";
-import { MessageCircle, LayoutGrid, BarChart3, SlidersHorizontal, Users, Settings, LifeBuoy, ShieldAlert, BookOpen, Bot, PieChart, CheckCircle, Code } from "lucide-react";
+import { MessagesSquare, LayoutGrid, BarChart3, SlidersHorizontal, Users, Settings, LifeBuoy, ShieldAlert, BookOpen, Bot, PieChart, CheckCircle, Code } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "./ui/badge";
@@ -51,7 +51,7 @@ export function MainSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2">
-          <MessageCircle className="w-7 h-7 text-primary" />
+          <MessagesSquare className="w-7 h-7 text-primary" />
           <span className="text-lg font-semibold font-headline">ResponseFlow</span>
         </div>
       </SidebarHeader>

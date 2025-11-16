@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Mail, MapPin, User } from 'lucide-react';
+import { MessagesSquare, Mail, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 
@@ -45,7 +45,7 @@ export default function ContactPage() {
     <div className="flex flex-col min-h-screen bg-background">
        <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-          <MessageCircle className="h-7 w-7 text-primary" />
+          <MessagesSquare className="h-7 w-7 text-primary" />
           <span className="font-headline">ResponseFlow</span>
         </Link>
         <nav>

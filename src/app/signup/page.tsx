@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MessageCircle, Home } from "lucide-react";
+import { MessagesSquare, Home } from "lucide-react";
 import Link from "next/link";
 import { useUser } from '@/context/user-context';
 
@@ -35,7 +35,7 @@ export default function SignupPage() {
       <Card className="w-full max-w-sm mx-auto">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center mb-2">
-             <MessageCircle className="h-8 w-8 text-primary" />
+             <MessagesSquare className="h-8 w-8 text-primary" />
           </div>
           <CardTitle className="text-2xl font-headline">Create an Account</CardTitle>
           <CardDescription>Enter your information to get started.</CardDescription>

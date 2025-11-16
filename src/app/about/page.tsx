@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { MessageCircle, Users, Scale, Target } from 'lucide-react';
+import { MessagesSquare, Users, Scale, Target } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AboutPage() {
@@ -9,7 +9,7 @@ export default function AboutPage() {
     <div className="flex flex-col min-h-screen bg-background">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-          <MessageCircle className="h-7 w-7 text-primary" />
+          <MessagesSquare className="h-7 w-7 text-primary" />
           <span className="font-headline">ResponseFlow</span>
         </Link>
         <nav>

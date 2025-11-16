@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Mail, MessageCircle, Check, Menu, X } from 'lucide-react';
+import { ArrowRight, Mail, MessagesSquare, Check, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { ChannelIcon } from '@/components/channel-icon';
 import { Badge } from '@/components/ui/badge';
@@ -44,7 +44,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-background animate-fade-in-up">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-          <MessageCircle className="h-7 w-7 text-primary" />
+          <MessagesSquare className="h-7 w-7 text-primary" />
           <span className="font-headline">ResponseFlow</span>
         </Link>
         <nav className="hidden md:flex items-center gap-4">
@@ -244,7 +244,7 @@ export default function Home() {
       <footer className="border-t">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-lg mb-4 sm:mb-0">
-            <MessageCircle className="h-6 w-6 text-primary" />
+            <MessagesSquare className="h-6 w-6 text-primary" />
             <span className="font-headline">ResponseFlow</span>
           </div>
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground mb-4 sm:mb-0">

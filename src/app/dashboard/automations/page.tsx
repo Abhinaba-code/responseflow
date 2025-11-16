@@ -1,7 +1,8 @@
+
 'use client';
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { ArrowRight, Mail, MessageCircle, Tag, UserPlus, Bell } from "lucide-react";
+import { ArrowRight, Mail, MessagesSquare, Tag, UserPlus, Bell } from "lucide-react";
 import { withPlanGuard } from "@/components/with-plan-guard";
 
 function AutomationsPage() {
@@ -16,7 +17,7 @@ function AutomationsPage() {
             <div className="flex items-center gap-4 overflow-x-auto pb-4">
               <Card className="w-72 flex-shrink-0">
                 <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2"><MessageCircle className="h-4 w-4"/> Trigger</CardTitle>
+                  <CardTitle className="text-base flex items-center gap-2"><MessagesSquare className="h-4 w-4"/> Trigger</CardTitle>
                   <CardDescription>When a new message is received</CardDescription>
                 </CardHeader>
               </Card>
