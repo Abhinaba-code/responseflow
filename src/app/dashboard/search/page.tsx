@@ -2,6 +2,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { tickets, initialCustomers, initialKnowledgeBase } from '@/lib/data';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Ticket, Customer } from '@/lib/types';
@@ -16,7 +17,7 @@ type KnowledgeArticle = {
     content: string;
 };
 
-export default function SearchPage() {
+function SearchResults() {
     const searchParams = useSearchParams();
     const query = searchParams.get('q') || '';
 
@@ -116,5 +117,13 @@ export default function SearchPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={<div>Loading search results...</div>}>
+            <SearchResults />
+        </Suspense>
     );
 }
