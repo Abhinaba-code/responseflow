@@ -142,6 +142,7 @@ export function ChatbotWidget() {
   const handleSend = () => {
     if (!input.trim()) return;
     const userMessage: Message = { role: "user", content: input };
+    const currentMessages = messages;
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput("");
@@ -149,7 +150,7 @@ export function ChatbotWidget() {
     startTransition(async () => {
       const result = await chatbotAction({
         query: input,
-        history: messages,
+        history: currentMessages,
       });
 
       if (result.success && result.response) {
@@ -165,12 +166,16 @@ export function ChatbotWidget() {
           description: result.error || "Something went wrong.",
         });
         // Remove the user message if the API call fails
-         setMessages(messages);
+         setMessages(currentMessages);
       }
     });
   };
 
   const onMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isOpen) {
+        // Prevent dragging when popover is open
+        return;
+    }
     e.preventDefault();
     setIsDragging(true);
     hasBeenDragged.current = false;
@@ -205,6 +210,17 @@ export function ChatbotWidget() {
     }
   };
 
+  const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isDragging) {
+      e.preventDefault();
+      return;
+    }
+    if (!hasBeenDragged.current) {
+      setIsOpen((prev) => !prev);
+    }
+  }
+
+
   useEffect(() => {
     if (isDragging) {
       window.addEventListener("mousemove", onMouseMove);
@@ -232,6 +248,7 @@ export function ChatbotWidget() {
             transform: `translate(-50%, -50%)`,
           }}
           onMouseDown={onMouseDown}
+          onClick={onClick}
         >
           <Bot className="h-6 w-6" />
         </Button>
